@@ -58,6 +58,17 @@ The global contract is already published by hash on testnet; `client/bin/publish
 ## Verify it
 
 - `pnpm verify` (in `client/`): derives both deal addresses from [evidence/testnet/offer.json](evidence/testnet/offer.json), checks each account runs global contract `axfgbr7M92qkfNtSd8RP923HQmWLPynQp4qMjYUTcoG` and has no access keys, checks their status (tier A `Paid`, tier B below its minimum after the deadline), and checks all 32 recorded transactions' outcomes (success, or the expected rejection) over testnet RPC.
+- If the default RPC (FastNEAR testnet) is unavailable, run the same check from `client/` against another provider:
+
+  ```bash
+  # Alternative provider if the default is unavailable (non-archival)
+  SD_RPC_URL=https://near-testnet.drpc.org pnpm verify
+
+  # Archival provider for historical transaction lookups (rate-limited: a 429 means rerun later)
+  SD_RPC_URL=https://archival-rpc.testnet.near.org pnpm verify
+  ```
+
+  Both passed 38/38 at `9a57969` on 14 November; the archival endpoint also answered 429 in one run that day. See [NEAR's RPC providers](https://docs.near.org/api/rpc/providers). This note covers `pnpm verify` only; the live page keeps its own RPC fallback.
 - `pnpm tsx bin/verify-pass.ts ../evidence/testnet/pass-ada.json`: the delivered pass's ed25519 signature, that the signing key is on the seller account, that its sha256 is recorded on the deal for that buyer and those units, and that it is within its validity.
 - `pnpm tsx bin/api.ts --offer ../evidence/testnet/offer.json` then, in another shell, `pnpm tsx bin/api-demo.ts ../evidence/testnet/pass-ada.json --api http://127.0.0.1:8787`: the local Quote Feed API answers 200 to the valid pass and 401 to a tampered pass and to a request without one. The API trusts only the offer it was started with: it derives that offer's deal addresses itself and refuses passes from any other seller, deal or product before checking the chain (tested in `client/test/api.test.ts`).
 - The code hash is the sha256 of `contract/target/near/schelling_deal.wasm` built with `cargo near build non-reproducible-wasm --no-abi` (toolchain pinned in `contract/rust-toolchain.toml`). The build is not certified reproducible; the deployed code is identified by the hash on-chain.
