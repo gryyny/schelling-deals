@@ -21,7 +21,7 @@ pnpm -s tsx bin/seller.ts fulfil --offer $O/offer.json | tee $O/4-fulfil.log
 for f in $(grep -o 'out/passes/[^,]*\.json' $O/4-fulfil.log); do pnpm -s tsx bin/verify-pass.ts $f; done | tee $O/5-verify.log
 ADA_PASS=$(grep -o 'out/passes/[^,]*\.json' $O/4-fulfil.log | head -1)
 echo "== Ada uses her pass on the seller's Quote Feed API (local service)"
-pnpm -s tsx bin/api.ts --port 8787 > $O/api-server.log 2>&1 &
+pnpm -s tsx bin/api.ts --offer $O/offer.json --port 8787 > $O/api-server.log 2>&1 &
 API=$!; sleep 3
 pnpm -s tsx bin/api-demo.ts $ADA_PASS --api http://127.0.0.1:8787 | tee $O/6-api.log
-kill $API
+kill $API; pkill -f "bin/api.ts --offer $O/offer.json" 2>/dev/null || true

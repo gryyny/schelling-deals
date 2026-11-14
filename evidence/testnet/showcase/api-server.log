@@ -1,4 +1,6 @@
-Quote Feed API on http://127.0.0.1:8787/v1/quotes (pass-gated; sample data)
+Quote Feed API on http://127.0.0.1:8787/v1/quotes (pass-gated; sample data); seller seller-sdl7338.testnet, deals 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67, 0s991d30efcae6251b55dfa152d70175d05bba0ce3
 GET /v1/quotes -> 200
 GET /v1/quotes -> 401 (signatureValid)
 GET /v1/quotes -> 401 (missing Authorization: Pass <base64url pass>)
+Quote Feed API on http://127.0.0.1:8787/v1/quotes (pass-gated; sample data); seller seller-sdl7338.testnet, deals 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67, 0s991d30efcae6251b55dfa152d70175d05bba0ce3
+GET /v1/quotes -> 401 (pass is not for a deal of this API's offer)

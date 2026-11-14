@@ -1,22 +1,32 @@
 import { generateKey } from "near-kit";
 import { describe, expect, it } from "vitest";
-import { handleApiRequest } from "../src/api.ts";
+import { type ApiPolicy, apiPolicyFromOffer, handleApiRequest } from "../src/api.ts";
+import { dealAccountId, type Offer, termsFor } from "../src/deal.ts";
 import { type ChainReader, encodePassHeader, MONTH_MS, type Pass, passDigest, signPass } from "../src/pass.ts";
 
 const key = generateKey();
 const issuedAt = "2026-11-14T00:00:00.000Z";
-const pass: Pass = { deal: "0sdeal", buyer: "ada.testnet", units: 2, redemptionId: 0, item: "Quote Feed", issuedAt };
+const offer: Offer = {
+  offerId: "quotefeed-test",
+  codeHash: "axfgbr7M92qkfNtSd8RP923HQmWLPynQp4qMjYUTcoG",
+  seller: "seller.testnet",
+  item: "Quote Feed",
+  tiers: [{ minUnits: 2, maxUnits: 4, unitPriceYocto: "100000000000000000000000", deadlineNs: "1800000000000000000" }],
+};
+const policy: ApiPolicy = apiPolicyFromOffer(offer);
+const deal = dealAccountId(termsFor(offer, 0));
+const pass: Pass = { deal, buyer: "ada.testnet", units: 2, redemptionId: 0, item: "Quote Feed", issuedAt };
 const sp = signPass(pass, "seller.testnet", key);
 const now = Date.parse(issuedAt) + 1000;
 
-function chain(over: Partial<{ keys: string[]; seller: string | null; digest: string | null; units: number }> = {}): ChainReader {
+function chain(over: Partial<{ keys: string[]; seller: string | null; digest: string | null; units: number }> = {}, forPass: Pass = pass): ChainReader {
   return {
     accessKeys: async () => over.keys ?? [key.publicKey.toString()],
     dealSeller: async () => (over.seller === undefined ? "seller.testnet" : over.seller),
-    redemption: async () => ({ buyer: "ada.testnet", units: over.units ?? 2, note: "", digest: over.digest === undefined ? passDigest(pass) : over.digest }),
+    redemption: async () => ({ buyer: "ada.testnet", units: over.units ?? 2, note: "", digest: over.digest === undefined ? passDigest(forPass) : over.digest }),
   };
 }
-const get = (authorization: string | undefined, c = chain(), t = now) => handleApiRequest({ method: "GET", path: "/v1/quotes", authorization }, c, t);
+const get = (authorization: string | undefined, c = chain(), t = now) => handleApiRequest({ method: "GET", path: "/v1/quotes", authorization }, policy, c, t);
 
 describe("Quote Feed API", () => {
   it("serves a valid pass", async () => {
@@ -45,6 +55,33 @@ describe("Quote Feed API", () => {
     expect((await get(encodePassHeader(sp), chain(), end)).body["error"]).toBe("withinValidity");
   });
   it("404s other routes", async () => {
-    expect((await handleApiRequest({ method: "GET", path: "/", authorization: undefined }, chain(), now)).status).toBe(404);
+    expect((await handleApiRequest({ method: "GET", path: "/", authorization: undefined }, policy, chain(), now)).status).toBe(404);
+  });
+  it("rejects a correctly signed, chain-consistent pass from another seller", async () => {
+    const otherKey = generateKey();
+    const otherOffer: Offer = { ...offer, seller: "mallory.testnet" };
+    const otherPass: Pass = { ...pass, deal: dealAccountId(termsFor(otherOffer, 0)) };
+    const otherSp = signPass(otherPass, "mallory.testnet", otherKey);
+    const otherChain: ChainReader = {
+      accessKeys: async () => [otherKey.publicKey.toString()],
+      dealSeller: async () => "mallory.testnet",
+      redemption: async () => ({ buyer: "ada.testnet", units: 2, note: "", digest: passDigest(otherPass) }),
+    };
+    const r = await get(encodePassHeader(otherSp), otherChain);
+    expect(r.status).toBe(401);
+    expect(r.body["error"]).toBe("pass is not from this API's seller");
+  });
+  it("rejects a pass from this seller for a deal outside the trusted offer", async () => {
+    const otherOffer: Offer = { ...offer, offerId: "another-offer" };
+    const otherPass: Pass = { ...pass, deal: dealAccountId(termsFor(otherOffer, 0)) };
+    const r = await get(encodePassHeader(signPass(otherPass, "seller.testnet", key)), chain({}, otherPass));
+    expect(r.status).toBe(401);
+    expect(r.body["error"]).toBe("pass is not for a deal of this API's offer");
+  });
+  it("rejects a pass for another product even on a trusted deal", async () => {
+    const otherPass: Pass = { ...pass, item: "Something Else" };
+    const r = await get(encodePassHeader(signPass(otherPass, "seller.testnet", key)), chain({}, otherPass));
+    expect(r.status).toBe(401);
+    expect(r.body["error"]).toBe("pass is not for this API's product");
   });
 });

@@ -1,3 +1,5 @@
 ok   valid pass: HTTP 200 (expected 200) {"seat":"ada-sdl7338.testnet","validUntil":"2027-03-14T20:54:56.191Z","dataLabel":"sample data","quotes":[{"symbol":"NEAR/USD","bid":"3.141","ask":"3.143","ts":"2026-11-14T00:00:00Z"},{"symbol":"BTC/USD","bid":"91234.50","ask":"91240.00","ts":"2026-11-14T00:00:00Z"},{"symbol":"ETH/USD","bid":"3456.70","ask":"3457.10","ts":"2026-11-14T00:00:00Z"}]}
 ok   tampered pass (units changed): HTTP 401 (expected 401) {"error":"signatureValid","checks":{"signatureValid":false,"keyOnSellerAccount":true,"dealSellerMatches":true,"digestOnChain":false,"buyerAndUnitsMatch":false,"withinValidity":true}}
 ok   no Authorization header: HTTP 401 (expected 401) {"error":"missing Authorization: Pass <base64url pass>"}
+live: signed pass from this seller for a deal outside the trusted offer (superseded build): {"error":"pass is not for a deal of this API's offer"}
+ HTTP 401
