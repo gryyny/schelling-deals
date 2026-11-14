@@ -1,0 +1,133 @@
+[
+ {
+  "id": "s01",
+  "title": "Schelling Deals",
+  "tag": "NEAR testnet \u00b7 scripted buyer agents \u00b7 github.com/gryyny/schelling-deals",
+  "lines": [
+   "Four small buyers. One volume price: 0.10 NEAR/unit if at least 10 units sell together.",
+   "",
+   "Usually a platform or coordinator runs the pool: opens the round, holds the money, can change the rules.",
+   "",
+   "Here, nobody does."
+  ]
+ },
+ {
+  "id": "s02",
+  "title": "The seller publishes one offer, then stops",
+  "lines": [
+   "offer quotefeed-202611142027 written to out/showcase/offer.json",
+   "  tier A deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf",
+   "  tier B deal address 0s07da072ef043453a65efbc0957428d04d39de384",
+   "seller process exits now; funding, settlement and refunds do not need it",
+   "seller process exit code: 0; no seller process is running from here on"
+  ]
+ },
+ {
+  "id": "s03",
+  "title": "Each buyer derives the escrow address from the terms",
+  "image": "shots/page-top.png"
+ },
+ {
+  "id": "s04",
+  "title": "Different needs, different decisions",
+  "lines": [
+   "Ada: need 4 units, pay at most 0.12 NEAR/unit, budget 1 NEAR, prefers the tier most likely to close",
+   "Ada: choosing tier A, the lowest minimum among acceptable tiers",
+   "Bo: need 6 units, pay at most 0.11 NEAR/unit, budget 1 NEAR, prefers the tier most likely to close",
+   "Bo: choosing tier A, the lowest minimum among acceptable tiers",
+   "Cy: need 3 units, pay at most 0.05 NEAR/unit, budget 1 NEAR, prefers the tier most likely to close",
+   "tier A (0.1 NEAR/unit, min 10, max 20): rejected, price above my max 0.05 NEAR",
+   "tier B (0.07 NEAR/unit, min 30, max 60): rejected, price above my max 0.05 NEAR",
+   "Cy: no tier meets my limits, declining",
+   "Dee: need 5 units, pay at most 0.08 NEAR/unit, budget 1 NEAR, will wait for a cheaper tier",
+   "tier A (0.1 NEAR/unit, min 10, max 20): rejected, price above my max 0.08 NEAR",
+   "Dee: choosing the cheapest acceptable tier B; if it misses I reclaim my pledge"
+  ]
+ },
+ {
+  "id": "s05",
+  "title": "Two buyers, one keyless account",
+  "lines": [
+   "[Ada] derived deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf from code hash ADKfksXSef\u2026 + tier terms",
+   "[Ada] pledge 4 units, deposit 0.402 NEAR (had 0)",
+   "  tx 6aqTDZb9UG\u2026 ok events=pledge",
+   "[Bo] derived deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf from code hash ADKfksXSef\u2026 + tier terms",
+   "[Bo] pledge 6 units, deposit 0.602 NEAR (had 0)",
+   "  tx 4nfFCjnz6F\u2026 ok events=pledge",
+   "",
+   "testnet RPC, deal 0s90060430\u2026: 0 access keys (nobody can sign for it)",
+   "code: global contract by hash ADKfksXSef9h\u2026 (cannot change)"
+  ]
+ },
+ {
+  "id": "s06",
+  "title": "Minimum reached: the seller is paid exactly once",
+  "lines": [
+   "[Ada] deal: 10/10 units, 2 buyers, Open",
+   "[Ada] minimum reached; calling settle",
+   "  tx 49gee1C7PM\u2026 ok events=settle,payout",
+   "[Bo] minimum reached; calling settle",
+   "  tx 5fzwYfpAUJ\u2026 FAILED: Contract call failed: 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf.settle - Smart contract panicked: deal is not open events=-",
+   "[Bo] another buyer settled first (expected race; payment happens once)"
+  ]
+ },
+ {
+  "id": "s07",
+  "title": "The cheaper tier missed: Dee reclaims, no seller needed",
+  "lines": [
+   "[Dee] Dee: choosing the cheapest acceptable tier B; if it misses I reclaim my pledge",
+   "[Dee] pledge 5 units, deposit 0.352 NEAR (had 0)",
+   "[Dee] waiting: 5/30 units, deadline in 145s",
+   "[Dee] waiting: 5/30 units, deadline in 3s",
+   "[Dee] deal missed; claiming my refund",
+   "  tx BUdB68iA6C\u2026 ok events=refund",
+   "",
+   "refund = 5 x 0.07 NEAR + 0.002 storage fee = 0.352 NEAR, exactly what Dee paid"
+  ]
+ },
+ {
+  "id": "s08",
+  "title": "Redeem, deliver, verify",
+  "lines": [
+   "deal 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf (derived locally from offer quotefeed-202611142027)",
+   "  tx HSpDVPckcc\u2026 ok events=redeem",
+   "  redemption 0 for ada-sdl7338.testnet (4 units): pass out/passes/0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf-0.json, digest 2434e57ed43547ab7c76d19c1c023448f6fc021ebca79b19ffd640c8c79bd858",
+   "  confirm_delivery tx 4ffT8XTBFy\u2026 ok",
+   "ok   signatureValid",
+   "ok   keyOnSellerAccount",
+   "ok   dealSellerMatches",
+   "ok   digestMatchesFile",
+   "ok   digestOnChain",
+   "ok   buyerAndUnitsMatch",
+   "VALID pass for ada-sdl7338.testnet, 4 units, deal 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf"
+  ]
+ },
+ {
+  "id": "s09",
+  "title": "What it guarantees, and what it does not",
+  "lines": [
+   "Guaranteed by the contract:",
+   "  seller paid only at the minimum, and only once",
+   "  otherwise every buyer can reclaim exactly what they paid (claimable; anyone may trigger it)",
+   "  terms cannot change: they are the address; no keys, no admin, no upgrade",
+   "",
+   "Not guaranteed:",
+   "  that the seller delivers (delivery is recorded on-chain, not enforced)",
+   "",
+   "NEAR testnet. Buyer agents are scripted rules, not models.",
+   "Also tested on testnet: concurrent creation, changed terms, retried pledge, late pledge,",
+   "settle below/at minimum, double settle, refunds, failed payout."
+  ]
+ },
+ {
+  "id": "s10",
+  "title": "Schelling Deals",
+  "tag": "github.com/gryyny/schelling-deals \u00b7 gryyny.github.io/schelling-deals",
+  "lines": [
+   "The terms are the address.",
+   "No operator holds the money.",
+   "",
+   "cd client && pnpm install && pnpm verify    # read-only check against testnet"
+  ]
+ }
+]

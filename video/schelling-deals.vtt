@@ -1,0 +1,41 @@
+WEBVTT
+
+1
+00:00:00.050 --> 00:00:06.266
+Four small buyers want a volume price. Usually someone has to run the pool. Here, nobody does.
+
+2
+00:00:06.516 --> 00:00:14.268
+A seller publishes one offer: A P I passes, ten cents each, if at least ten sell together. Then the seller's process stops.
+
+3
+00:00:14.518 --> 00:00:23.998
+Each buyer agent reads the terms and computes the escrow address on its own. Same terms, same address. Change one number, and the address changes.
+
+4
+00:00:24.248 --> 00:00:34.283
+The agents are scripted, with different needs and budgets. Ada and Bo accept. Cy declines: the price is above its limit. Dee waits for a cheaper tier.
+
+5
+00:00:34.533 --> 00:00:44.269
+Ada and Bo send their pledges at the same moment. One account is created, both pledges count, and it has no access keys. Nobody can sign for it.
+
+6
+00:00:44.519 --> 00:00:50.521
+Ten units reached. Bo settles, and the seller is paid exactly once. A second settle fails.
+
+7
+00:00:50.771 --> 00:00:57.009
+The cheaper tier never filled. After its deadline, Dee claims an exact refund, without the seller.
+
+8
+00:00:57.259 --> 00:01:05.501
+Ada redeems her passes. The seller comes back, delivers a signed pass, and records its hash on chain. Anyone can verify it.
+
+9
+00:01:05.751 --> 00:01:14.037
+This runs on Near test net. The contract guarantees payment only at the minimum, or a refund. It does not force delivery.
+
+10
+00:01:14.287 --> 00:01:18.775
+Schelling Deals. The terms are the address. No operator holds the money.

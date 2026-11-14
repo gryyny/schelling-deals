@@ -1,5 +1,5 @@
 // Renders video/scenes.json to 1920x1080 frames, joins them with the narration WAVs,
-// writes captions (SRT/VTT) and video/out/schelling-deals.mp4.
+// burns each scene's caption into its frame, writes captions (SRT/VTT) and video/out/schelling-deals.mp4.
 // NODE_PATH=$(npm root -g) FFMPEG=/opt/homebrew/Cellar/ffmpeg/9.0.2_1/bin/ffmpeg node video/build.mjs
 import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
@@ -8,7 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const require = createRequire(import.meta.url);
-const { chromium } = require("playwright");
+const { chromium } = require("@playwright/cli/node_modules/playwright-core");
 const here = dirname(fileURLToPath(import.meta.url));
 const out = join(here, "out");
 const ffmpeg = process.env.FFMPEG ?? "ffmpeg";
@@ -41,13 +41,14 @@ function html(s) {
   pre{margin:0;white-space:pre-wrap;word-break:break-all;background:#151b23;border:1px solid #2a3340;border-radius:14px;padding:28px 34px;width:100%;box-sizing:border-box}
   img{max-width:100%;max-height:820px;border-radius:14px;border:1px solid #2a3340}
   .g{color:#7ee787}.r{color:#ff7b72}
-  </style><header>${esc(s.title)}</header><div class="tag">${esc(s.tag ?? "NEAR testnet · scripted buyer agents")}</div><main>${body}</main>`;
+  footer{position:fixed;left:0;right:0;bottom:0;padding:22px 120px 30px;background:rgba(0,0,0,.82);color:#fff;font:500 34px/1.35 -apple-system,Helvetica,sans-serif;text-align:center}
+  </style><header>${esc(s.title)}</header><div class="tag">${esc(s.tag ?? "NEAR testnet · scripted buyer agents")}</div><main>${body}</main><footer>${esc(spoken.get(s.id).replace(/A P I/g, "API").replace(/Near test net/g, "NEAR testnet").replace(/on chain/g, "on-chain"))}</footer>`;
 }
 
 const dur = (f) =>
   Number(execFileSync(ffmpeg.replace(/ffmpeg$/, "ffprobe"), ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", f]).toString());
 
-const browser = await chromium.launch();
+const browser = await chromium.launch({ channel: "chrome" });
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } });
 const parts = [];
 let t = 0;
@@ -81,6 +82,5 @@ const joined = join(out, "joined.mp4");
 execFileSync(ffmpeg, ["-y", "-loglevel", "error", "-f", "concat", "-safe", "0", "-i", join(out, "list.txt"), "-c", "copy", joined]);
 const final = join(out, "schelling-deals.mp4");
 execFileSync(ffmpeg, ["-y", "-loglevel", "error", "-i", joined,
-  "-vf", `subtitles=${join(here, "schelling-deals.srt")}:force_style='FontName=Helvetica,FontSize=15,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3,Outline=1,Shadow=0,MarginV=28'`,
   "-af", "loudnorm=I=-16:TP=-1.5:LRA=11", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", final]);
 console.log(`video ${final} ${t.toFixed(2)} s`);

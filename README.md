@@ -2,7 +2,7 @@
 
 Independent buyer agents pool a purchase on NEAR without a platform operator. The deal terms determine the escrow address; nobody holds its keys.
 
-**Testnet. The buyer agents are scripted (deterministic rules, no model).** Live page: https://gryyny.github.io/schelling-deals/ · Video: see the X post linked from the hackathon entry.
+**Testnet. The buyer agents are scripted (deterministic rules, no model).** Live page: https://gryyny.github.io/schelling-deals/ · Video: [video/schelling-deals.mp4](video/schelling-deals.mp4) (79 s, narrated, captions burned in; [captions](video/schelling-deals.srt)).
 
 ## The problem
 
