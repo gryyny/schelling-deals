@@ -1,0 +1,388 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Schelling Deals</title>
+<meta name="description" content="Independent agents pool a purchase without a platform operator. The deal terms determine the escrow address; nobody holds its keys.">
+<style>
+  :root {
+    --bg: #fbfbf9; --fg: #1b1d21; --muted: #5d636d; --line: #dcdfe3; --card: #ffffff;
+    --accent: #1f5fbf; --ok: #1b7a3a; --warn: #a15c00; --bad: #b3261e; --code: #f1f3f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #121417; --fg: #e7e9ec; --muted: #9aa1ab; --line: #2c3036; --card: #191c20;
+      --accent: #7fb0ff; --ok: #5fcf85; --warn: #e6a54a; --bad: #ff8a80; --code: #22262b;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 64px; }
+  h1 { font-size: 1.6rem; line-height: 1.25; margin: 8px 0 6px; }
+  h2 { font-size: 1.15rem; margin: 0 0 12px; }
+  h3 { font-size: 0.95rem; margin: 18px 0 8px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  p { margin: 0 0 10px; }
+  .sub { color: var(--muted); font-size: 1.05rem; margin-bottom: 14px; }
+  .badge { display: inline-block; font-size: .8rem; font-weight: 600; padding: 2px 8px; border-radius: 4px;
+    border: 1px solid var(--warn); color: var(--warn); }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 8px; padding: 16px; margin: 16px 0; }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .85rem; }
+  .mono { overflow-wrap: anywhere; word-break: break-all; }
+  dl.kv { display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; margin: 0; }
+  dl.kv dt { color: var(--muted); }
+  dl.kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; }
+  .flow { display: grid; gap: 6px; }
+  .step { background: var(--code); border-radius: 6px; padding: 8px 10px; min-width: 0; }
+  .step .lbl { font-size: .78rem; color: var(--muted); display: block; }
+  .arrow { color: var(--muted); text-align: center; font-size: .9rem; }
+  .addr { font-weight: 700; color: var(--accent); }
+  .hl { background: color-mix(in srgb, var(--accent) 22%, transparent); border-radius: 2px; }
+  .ok { color: var(--ok); } .bad { color: var(--bad); } .warn { color: var(--warn); } .muted { color: var(--muted); }
+  details summary { cursor: pointer; color: var(--muted); font-size: .9rem; }
+  .bar { height: 10px; background: var(--code); border-radius: 5px; position: relative; overflow: hidden; margin: 6px 0; }
+  .bar > span { position: absolute; inset: 0 auto 0 0; background: var(--accent); }
+  .bar > i { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--fg); }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); vertical-align: top; overflow-wrap: anywhere; }
+  .tablewrap { overflow-x: auto; }
+  a { color: var(--accent); }
+  .check { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .check label { display: block; font-size: .8rem; color: var(--muted); }
+  .check input, .check select { width: 100%; font: inherit; font-size: .9rem; padding: 6px 8px; color: var(--fg);
+    background: var(--bg); border: 1px solid var(--line); border-radius: 6px; }
+  .check .wide { grid-column: 1 / -1; }
+  .toggle { display: inline-flex; gap: 8px; align-items: center; font-weight: 600; cursor: pointer; }
+  footer { color: var(--muted); font-size: .85rem; margin-top: 32px; }
+  @media (min-width: 760px) {
+    h1 { font-size: 2rem; }
+    .flow { grid-template-columns: 1fr auto 1fr auto 1fr; align-items: center; }
+    .arrow { padding: 0 2px; }
+  }
+  @media (max-width: 480px) { .check { grid-template-columns: 1fr; } dl.kv { grid-template-columns: 1fr; gap: 0; } dl.kv dd { margin-bottom: 6px; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-sha3/0.9.3/sha3.min.js"
+  integrity="sha512-l8ZGwlcmmNhyMXRweX0SqrZHIdfK3UgOSJsdSK5ozqlXOsZDogZFYp+TUzzI7pFYGUmzTCKZjS1q0nHiWOvs0g=="
+  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</head>
+<body>
+<main>
+  <span class="badge">Testnet. Buyer agents are scripted.</span>
+  <h1>Independent agents pool a purchase without a platform operator.</h1>
+  <p class="sub">The deal terms determine the escrow address; nobody holds its keys.</p>
+
+  <section class="card" id="offer"><p class="muted">Loading offer…</p></section>
+  <div id="tiers"></div>
+
+  <section class="card" id="check">
+    <label class="toggle"><input type="checkbox" id="checkToggle"> Independent check: edit any term and watch the address change</label>
+    <div id="checkBody" hidden>
+      <p class="muted" style="margin-top:10px">Computed in this browser from the fields below. Nothing is sent anywhere.</p>
+      <div class="check" id="checkForm"></div>
+      <div id="checkOut" style="margin-top:12px"></div>
+    </div>
+  </section>
+
+  <section class="card" id="receipts" hidden></section>
+
+  <footer>
+    Derivation (NEP-616): <code>"0s" + hex(keccak256(borsh(StateInit))[12..32])</code>, where
+    <code>StateInit = V1 { code: CodeHash(offer.codeHash), data: { "STATE": borsh(DealState) } }</code>.
+    Chain data read from NEAR testnet RPC.
+  </footer>
+</main>
+
+<script>
+// ---- derivation (kept free of DOM so it can be tested outside the browser) ----
+const SD = (() => {
+  const B58 = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  function b58decode(s) {
+    let n = 0n;
+    for (const c of s) {
+      const i = B58.indexOf(c);
+      if (i < 0) throw new Error("invalid base58 character: " + c);
+      n = n * 58n + BigInt(i);
+    }
+    const out = [];
+    while (n > 0n) { out.unshift(Number(n & 255n)); n >>= 8n; }
+    for (const c of s) { if (c === "1") out.unshift(0); else break; }
+    return Uint8Array.from(out);
+  }
+  const utf8 = (s) => new TextEncoder().encode(s);
+  const uint = (v, bytes) => {
+    let n = BigInt(v);
+    if (n < 0n || n >= 1n << BigInt(bytes * 8)) throw new Error(`value ${v} out of range for u${bytes * 8}`);
+    const out = new Uint8Array(bytes);
+    for (let i = 0; i < bytes; i++) { out[i] = Number(n & 255n); n >>= 8n; }
+    return out;
+  };
+  const u8 = (v) => uint(v, 1), u32 = (v) => uint(v, 4), u64 = (v) => uint(v, 8), u128 = (v) => uint(v, 16);
+  const bytesVec = (b) => concat([u32(b.length), b]);
+  const str = (s) => bytesVec(utf8(s));
+  function concat(parts) {
+    const out = new Uint8Array(parts.reduce((a, p) => a + p.length, 0));
+    let o = 0;
+    for (const p of parts) { out.set(p, o); o += p.length; }
+    return out;
+  }
+  const hex = (b) => Array.from(b, (x) => x.toString(16).padStart(2, "0")).join("");
+
+  function dealStateBytes(offer, tier) {
+    return concat([
+      str(offer.seller), str(offer.item), str(offer.offerId),
+      u128(tier.unitPriceYocto), u32(tier.minUnits), u32(tier.maxUnits), u64(tier.deadlineNs),
+      u32(0), u32(0), u8(0), u32(0),
+    ]);
+  }
+  // borsh(StateInit): enum V1 (u8 0) { code: GlobalContractIdentifier::CodeHash (u8 0) + [u8;32],
+  // data: map as u32 count + (Vec<u8> key, Vec<u8> value) sorted by key }. Single key "STATE".
+  function stateInitBytes(offer, tier) {
+    const codeHash = b58decode(offer.codeHash);
+    if (codeHash.length !== 32) throw new Error(`code hash must be 32 bytes, got ${codeHash.length}`);
+    return concat([u8(0), u8(0), codeHash, u32(1), bytesVec(utf8("STATE")), bytesVec(dealStateBytes(offer, tier))]);
+  }
+  function derive(offer, tier, keccak) {
+    const init = stateInitBytes(offer, tier);
+    const hash = new Uint8Array(keccak.arrayBuffer(init));
+    return { init, hash: hex(hash), account: "0s" + hex(hash.slice(12, 32)) };
+  }
+  return { derive, dealStateBytes, stateInitBytes, b58decode, hex };
+})();
+if (typeof module !== "undefined") module.exports = SD;
+</script>
+
+<script>
+(() => {
+  if (typeof document === "undefined") return;
+  const RPCS = ["https://test.rpc.fastnear.com", "https://rpc.testnet.near.org"];
+  const EXPLORER = "https://testnet.nearblocks.io";
+  const STATUS = ["Open", "Paying", "Paid", "PayoutFailed"];
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const keccak = window.keccak256;
+
+  const YOCTO = 10n ** 24n;
+  function near(yocto) {
+    const n = BigInt(yocto);
+    const whole = n / YOCTO, frac = (n % YOCTO).toString().padStart(24, "0").replace(/0+$/, "").slice(0, 4);
+    return `${whole}${frac ? "." + frac : ""} NEAR`;
+  }
+  const nsToDate = (ns) => new Date(Number(BigInt(ns) / 1000000n));
+  function countdown(ns) {
+    const ms = Number(BigInt(ns) / 1000000n) - Date.now();
+    if (ms <= 0) return "deadline passed";
+    const s = Math.floor(ms / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+    return `${d ? d + "d " : ""}${h}h ${m}m ${s % 60}s left`;
+  }
+
+  async function rpc(method, params) {
+    let last;
+    for (const url of RPCS) {
+      let j;
+      try {
+        const r = await fetch(url, { method: "POST", headers: { "content-type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: "sd", method, params }) });
+        j = await r.json();
+      } catch (e) { last = e; continue; } // unreachable or rate limited: try the fallback
+      if (!j.error) return j.result;
+      const cause = j.error.cause && j.error.cause.name;
+      if (cause === "UNKNOWN_ACCOUNT") return { missing: true };
+      last = new Error(cause || (j.error.data && String(j.error.data)) || j.error.message);
+      if (cause && cause !== "INTERNAL_ERROR" && cause !== "TIMEOUT_ERROR") throw last;
+    }
+    throw last;
+  }
+  const query = (p) => rpc("query", { finality: "final", ...p });
+
+  async function loadJson(url) {
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`${url}: HTTP ${r.status}`);
+    return r.json();
+  }
+
+  function flowHtml(offer, tier, d) {
+    const stateLen = SD.dealStateBytes(offer, tier).length;
+    const tail = d.hash.slice(24);
+    return `
+      <div class="flow">
+        <div class="step"><span class="lbl">1. terms → borsh(StateInit), ${d.init.length} bytes</span>
+          <span class="mono">V1 · CodeHash(${esc(offer.codeHash.slice(0, 10))}…) · STATE = DealState (${stateLen} bytes)</span></div>
+        <div class="arrow">→ keccak256 →</div>
+        <div class="step"><span class="lbl">2. hash (last 20 bytes highlighted)</span>
+          <span class="mono">${d.hash.slice(0, 24)}<span class="hl">${tail}</span></span></div>
+        <div class="arrow">→ "0s" + →</div>
+        <div class="step"><span class="lbl">3. deal account</span><span class="mono addr">${esc(d.account)}</span></div>
+      </div>
+      <details style="margin-top:8px"><summary>Show the exact bytes that were hashed</summary>
+        <p class="mono" style="margin-top:6px">${SD.hex(d.init)}</p></details>`;
+  }
+
+  function renderOffer(offer, source) {
+    $("#offer").innerHTML = `
+      <h2>Offer <span class="mono muted">${esc(offer.offerId)}</span></h2>
+      ${source === "example" ? `<p class="warn">Showing <code>offer.example.json</code> (placeholder values; no deals exist on chain for it).</p>` : ""}
+      <dl class="kv">
+        <dt>Item</dt><dd>${esc(offer.item)}</dd>
+        <dt>Seller</dt><dd><a href="${EXPLORER}/address/${encodeURIComponent(offer.seller)}" class="mono">${esc(offer.seller)}</a></dd>
+        <dt>Contract code</dt><dd><span class="mono">${esc(offer.codeHash)}</span><br><span class="muted">global contract referenced by hash, so its code cannot change</span></dd>
+        <dt>Tiers</dt><dd>${offer.tiers.length}: each tier is its own deal with its own address</dd>
+      </dl>`;
+  }
+
+  function tierCard(offer, tier, i) {
+    const el = document.createElement("section");
+    el.className = "card";
+    let d;
+    try { d = SD.derive(offer, tier, keccak); } catch (e) {
+      el.innerHTML = `<h2>Tier ${i + 1}</h2><p class="bad">Cannot derive address: ${esc(e.message)}</p>`;
+      return el;
+    }
+    const pinned = tier.dealAccount && tier.dealAccount !== d.account
+      ? `<p class="bad">offer.json lists ${esc(tier.dealAccount)}, which does not match the derived address.</p>` : "";
+    el.innerHTML = `
+      <h2>Tier ${i + 1}: ${tier.minUnits}–${tier.maxUnits} units at ${near(tier.unitPriceYocto)} each</h2>
+      <dl class="kv">
+        <dt>Minimum to settle</dt><dd>${tier.minUnits} units (${near(BigInt(tier.unitPriceYocto) * BigInt(tier.minUnits))})</dd>
+        <dt>Deadline</dt><dd>${nsToDate(tier.deadlineNs).toISOString().replace(".000Z", "Z")} · <span data-cd="${esc(tier.deadlineNs)}">${countdown(tier.deadlineNs)}</span></dd>
+      </dl>
+      <h3>Terms → address</h3>
+      ${flowHtml(offer, tier, d)}
+      ${pinned}
+      <h3>On testnet</h3>
+      <div class="chain"><p class="muted">Reading testnet…</p></div>`;
+    loadChain(offer, d.account, el.querySelector(".chain"));
+    return el;
+  }
+
+  async function loadChain(offer, account, box) {
+    const link = `<a class="mono" href="${EXPLORER}/address/${account}">${account}</a>`;
+    try {
+      const acc = await query({ request_type: "view_account", account_id: account });
+      if (acc.missing) {
+        box.innerHTML = `<p>${link}</p><p class="muted">Not created yet. The first buyer's pledge creates it from these terms.</p>`;
+        return;
+      }
+      const gHash = acc.global_contract_hash, gAcc = acc.global_contract_account_id;
+      const codeLine = gHash
+        ? `global contract by hash <span class="mono">${esc(gHash)}</span> ${gHash === offer.codeHash ? `<span class="ok">matches offer</span>` : `<span class="bad">differs from offer</span>`}`
+        : gAcc ? `<span class="bad">global contract by account ${esc(gAcc)} (mutable reference)</span>`
+        : `code hash <span class="mono">${esc(acc.code_hash)}</span>`;
+      const keys = await query({ request_type: "view_access_key_list", account_id: account }).catch(() => null);
+      const nKeys = keys && keys.keys ? keys.keys.length : null;
+      const keyLine = nKeys === 0 ? `<span class="ok">No access keys: nobody can sign for this account.</span>`
+        : nKeys === null ? `<span class="warn">Could not read access keys.</span>`
+        : `<span class="bad">${nKeys} access key(s) present.</span>`;
+      box.innerHTML = `<dl class="kv">
+          <dt>Account</dt><dd>${link} <span class="ok">exists</span></dd>
+          <dt>Balance</dt><dd>${near(acc.amount)}</dd>
+          <dt>Code</dt><dd>${codeLine}</dd>
+          <dt>Keys</dt><dd>${keyLine}</dd>
+        </dl><div class="deal"><p class="muted">Calling get_deal…</p></div>`;
+      const dealBox = box.querySelector(".deal");
+      try {
+        const r = await query({ request_type: "call_function", account_id: account, method_name: "get_deal", args_base64: btoa("{}") });
+        if (r.error) throw new Error(r.error);
+        dealBox.innerHTML = dealHtml(JSON.parse(new TextDecoder().decode(Uint8Array.from(r.result))));
+      } catch (e) {
+        dealBox.innerHTML = `<p class="warn">get_deal failed: ${esc(e.message || e)}</p>`;
+      }
+    } catch (e) {
+      box.innerHTML = `<p>${link}</p><p class="warn">Testnet read failed: ${esc(e.message || e)}</p>`;
+    }
+  }
+
+  function dealHtml(deal) {
+    const total = Number(deal.total_units), min = Number(deal.min_units), max = Number(deal.max_units);
+    const raw = typeof deal.status === "number" ? STATUS[deal.status] || deal.status : deal.status;
+    const missed = raw === "Open" && BigInt(deal.now_ns || 0) >= BigInt(deal.deadline_ns) && total < min;
+    const status = missed
+      ? "Missed: deadline passed below the minimum; each buyer can claim a refund (pledged counts are totals at the deadline)"
+      : raw === "PayoutFailed" ? "Payout failed: each buyer can claim a refund" : raw;
+    const pct = (v) => Math.min(100, (v / max) * 100).toFixed(1);
+    return `<h3>get_deal()</h3>
+      <dl class="kv">
+        <dt>Status</dt><dd><strong>${esc(status)}</strong></dd>
+        <dt>Pledged</dt><dd>${total} of ${max} units (minimum ${min}) · ${esc(deal.buyers)} buyer(s)</dd>
+      </dl>
+      <div class="bar" role="img" aria-label="${total} of ${max} units pledged, minimum ${min}"><span style="width:${pct(total)}%"></span><i style="left:${pct(min)}%"></i></div>
+      <dl class="kv">
+        <dt>Deadline</dt><dd><span data-cd="${esc(deal.deadline_ns)}">${countdown(deal.deadline_ns)}</span></dd>
+        ${deal.redemptions !== undefined ? `<dt>Redemptions</dt><dd>${esc(deal.redemptions)}</dd>` : ""}
+      </dl>`;
+  }
+
+  function renderReceipts(data) {
+    const rows = Array.isArray(data) ? data : (data && data.rows) || [];
+    if (!rows.length) return;
+    const box = $("#receipts");
+    box.hidden = false;
+    box.innerHTML = `<h2>Transactions</h2><div class="tablewrap"><table>
+      <thead><tr><th>Step</th><th>Transaction</th><th>Outcome</th></tr></thead><tbody>
+      ${rows.map((r) => `<tr><td>${esc(r.label || "")}</td>
+        <td>${r.tx ? `<a class="mono" href="${EXPLORER}/txns/${encodeURIComponent(r.tx)}">${esc(r.tx.slice(0, 10))}…</a>` : ""}</td>
+        <td>${esc(r.outcome || "")}</td></tr>`).join("")}
+      </tbody></table></div>`;
+  }
+
+  function setupCheck(offer) {
+    const fields = [
+      ["codeHash", "Code hash (base58)", offer.codeHash, true],
+      ["seller", "Seller", offer.seller], ["offerId", "Offer id", offer.offerId],
+      ["item", "Item", offer.item, true],
+    ];
+    const form = $("#checkForm");
+    form.innerHTML = `<div class="wide"><label for="ck-tier">Tier</label><select id="ck-tier">
+        ${offer.tiers.map((t, i) => `<option value="${i}">Tier ${i + 1}</option>`).join("")}</select></div>` +
+      fields.map(([k, l, v, wide]) => `<div class="${wide ? "wide" : ""}"><label for="ck-${k}">${l}</label><input id="ck-${k}" data-k="${k}" value="${esc(v)}"></div>`).join("") +
+      [["unitPriceYocto", "Unit price (yoctoNEAR)"], ["minUnits", "Min units"], ["maxUnits", "Max units"], ["deadlineNs", "Deadline (ns)"]]
+        .map(([k, l]) => `<div><label for="ck-${k}">${l}</label><input id="ck-${k}" data-t="${k}" inputmode="numeric"></div>`).join("");
+    const fillTier = () => {
+      const t = offer.tiers[Number($("#ck-tier").value)];
+      form.querySelectorAll("[data-t]").forEach((el) => { el.value = t[el.dataset.t]; });
+      update();
+    };
+    const update = () => {
+      const idx = Number($("#ck-tier").value);
+      const o = { ...offer }, t = {};
+      form.querySelectorAll("[data-k]").forEach((el) => { o[el.dataset.k] = el.value; });
+      form.querySelectorAll("[data-t]").forEach((el) => { t[el.dataset.t] = el.value.trim(); });
+      const original = SD.derive(offer, offer.tiers[idx], keccak).account;
+      try {
+        const d = SD.derive(o, t, keccak);
+        const same = d.account === original;
+        $("#checkOut").innerHTML = flowHtml(o, t, d) +
+          `<p style="margin-top:10px">${same ? `<span class="ok">Same address as the published tier ${idx + 1}.</span>`
+            : `<span class="bad">Different address.</span> The published tier ${idx + 1} is <span class="mono">${original}</span>; changing any term moves the deal elsewhere.`}</p>`;
+      } catch (e) {
+        $("#checkOut").innerHTML = `<p class="bad">${esc(e.message)}</p>`;
+      }
+    };
+    form.addEventListener("input", (e) => (e.target.id === "ck-tier" ? fillTier() : update()));
+    form.addEventListener("change", (e) => { if (e.target.id === "ck-tier") fillTier(); });
+    $("#checkToggle").addEventListener("change", (e) => { $("#checkBody").hidden = !e.target.checked; });
+    fillTier();
+  }
+
+  async function main() {
+    if (!keccak) { $("#offer").innerHTML = `<p class="bad">Could not load the keccak256 library from cdnjs.</p>`; return; }
+    const param = new URLSearchParams(location.search).get("offer");
+    let offer, source = "offer";
+    try { offer = await loadJson(param || "offer.json"); }
+    catch (e) {
+      if (param) { $("#offer").innerHTML = `<p class="bad">Could not load offer: ${esc(e.message)}</p>`; return; }
+      offer = await loadJson("offer.example.json"); source = "example";
+    }
+    renderOffer(offer, source);
+    const tiers = $("#tiers");
+    offer.tiers.forEach((t, i) => tiers.appendChild(tierCard(offer, t, i)));
+    setupCheck(offer);
+    if (source !== "example") loadJson("receipts.json").then(renderReceipts).catch(() => {});
+    setInterval(() => document.querySelectorAll("[data-cd]").forEach((el) => { el.textContent = countdown(el.dataset.cd); }), 1000);
+  }
+  main().catch((e) => { $("#offer").innerHTML = `<p class="bad">${esc(e.message)}</p>`; });
+})();
+</script>
+</body>
+</html>

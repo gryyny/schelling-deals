@@ -1,0 +1,585 @@
+{
+  "runs": [
+    {
+      "runId": "2026-11-14T20-21-27-972Z-0b2a43",
+      "network": "testnet",
+      "codeHash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+      "seller": "seller-sdl7338.testnet",
+      "buyers": [
+        "ada-sdl7338.testnet",
+        "bo-sdl7338.testnet"
+      ],
+      "scenarios": [
+        {
+          "id": "a",
+          "title": "two buyers create+pledge the same fresh deal concurrently",
+          "pass": true,
+          "checks": {
+            "dealId": "0sa7a4fa12621c5e5e5a1aa8203c75d8b157800811",
+            "existedBefore": false,
+            "getDeal": {
+              "seller": "seller-sdl7338.testnet",
+              "item": "Quote Feed API access pass: 1 unit = 1 month of one API seat",
+              "offer_id": "scn-2026-11-14T20-21-27-972Z-0b2a43-main",
+              "unit_price": "10000000000000000000000",
+              "min_units": 3,
+              "max_units": 10,
+              "deadline_ns": "1794688285610106952",
+              "total_units": 2,
+              "buyers": 2,
+              "status": "Open",
+              "redemptions": 0,
+              "now_ns": "1794687689912058353"
+            },
+            "accessKeys": 0,
+            "viewAccount": {
+              "amount": "24000000000000000000000",
+              "locked": "0",
+              "code_hash": "11111111111111111111111111111111",
+              "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+              "storage_usage": 491,
+              "storage_paid_at": 0,
+              "block_height": 277705560,
+              "block_hash": "2E4wsdVRrNa224Gjq73ugLLe4gZaksCYR3Y7wbFPPSFT"
+            }
+          },
+          "txs": [
+            {
+              "label": "b1 create+pledge 1",
+              "hash": "5yF4xw97bj5LAn2ZRDUFpRVEEJxy8vadgY5gfrfPVe2P",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0sa7a4fa12621c5e5e5a1aa8203c75d8b157800811",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 1,
+                    "total_units": 2
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":1,\"total_units\":2}}"
+              ]
+            },
+            {
+              "label": "b2 create+pledge 1",
+              "hash": "Rdx29rMydE6ohMPfXRvLQXJHXghFFt9VXajiuUxK88Z",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0sa7a4fa12621c5e5e5a1aa8203c75d8b157800811",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "bo-sdl7338.testnet",
+                    "units": 1,
+                    "total_units": 1
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"bo-sdl7338.testnet\",\"units\":1,\"total_units\":1}}"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "title": "altered terms (price +1 yocto) derive a different address",
+          "pass": true,
+          "checks": {
+            "original": "0sa7a4fa12621c5e5e5a1aa8203c75d8b157800811",
+            "alteredPricePlus1Yocto": "0sad678f202a8f790444d85e05f694a369f2d81ff5"
+          },
+          "txs": []
+        },
+        {
+          "id": "h",
+          "title": "deal account has no access keys and runs the published code hash",
+          "pass": true,
+          "checks": {
+            "dealId": "0sa7a4fa12621c5e5e5a1aa8203c75d8b157800811",
+            "accessKeys": 0,
+            "code_hash": "11111111111111111111111111111111",
+            "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28"
+          },
+          "txs": []
+        }
+      ]
+    },
+    {
+      "runId": "2026-11-14T20-21-47-071Z-e2dff8",
+      "network": "testnet",
+      "codeHash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+      "seller": "seller-sdl7338.testnet",
+      "buyers": [
+        "ada-sdl7338.testnet",
+        "bo-sdl7338.testnet"
+      ],
+      "scenarios": [
+        {
+          "id": "a",
+          "title": "two buyers create+pledge the same fresh deal concurrently",
+          "pass": true,
+          "checks": {
+            "dealId": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+            "existedBefore": false,
+            "getDeal": {
+              "seller": "seller-sdl7338.testnet",
+              "item": "Quote Feed API access pass: 1 unit = 1 month of one API seat",
+              "offer_id": "scn-2026-11-14T20-21-47-071Z-e2dff8-main",
+              "unit_price": "10000000000000000000000",
+              "min_units": 3,
+              "max_units": 10,
+              "deadline_ns": "1794688312192066823",
+              "total_units": 2,
+              "buyers": 2,
+              "status": "Open",
+              "redemptions": 0,
+              "now_ns": "1794687716321493135"
+            },
+            "accessKeys": 0,
+            "viewAccount": {
+              "amount": "24000000000000000000000",
+              "locked": "0",
+              "code_hash": "11111111111111111111111111111111",
+              "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+              "storage_usage": 491,
+              "storage_paid_at": 0,
+              "block_height": 277705605,
+              "block_hash": "4zhpnfBaMHqw51XLZ7QAjyxecvamKi6GDxWwoF4tjAvW"
+            }
+          },
+          "txs": [
+            {
+              "label": "b1 create+pledge 1",
+              "hash": "DyJB9VdJV9mP5bhfmX3kUL4JceE2KhwHCjQYU6rT1WPn",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 1,
+                    "total_units": 2
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":1,\"total_units\":2}}"
+              ]
+            },
+            {
+              "label": "b2 create+pledge 1",
+              "hash": "5nnrKZwzqZLfs4ZemRCZg1KUyBS5iZ57vYVvSCGFLXQS",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "bo-sdl7338.testnet",
+                    "units": 1,
+                    "total_units": 1
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"bo-sdl7338.testnet\",\"units\":1,\"total_units\":1}}"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "b",
+          "title": "altered terms (price +1 yocto) derive a different address",
+          "pass": true,
+          "checks": {
+            "original": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+            "alteredPricePlus1Yocto": "0s2c177fe6cf790176a27737f2ac06b3d14f31c424"
+          },
+          "txs": []
+        },
+        {
+          "id": "c",
+          "title": "retried identical pledge is rejected and its deposit returned",
+          "pass": true,
+          "checks": {
+            "deposit": "0.012 NEAR",
+            "netSpentGas": "0.000968 NEAR",
+            "totalUnitsAfter": 2
+          },
+          "txs": [
+            {
+              "label": "b1 retries identical pledge 1 (expect reject)",
+              "hash": "4ZoCxvFG727yCVUCxmVecb9BVwK2A5PLR4bdS2tA3xBX",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": false,
+              "error": "Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.pledge - Smart contract panicked: already pledged",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            }
+          ]
+        },
+        {
+          "id": "e",
+          "title": "settle below min rejected; at min pays seller exactly once",
+          "pass": true,
+          "checks": {
+            "topUpDeposit": "0.01 NEAR",
+            "sellerDelta": "0.03 NEAR",
+            "expected": "0.03 NEAR",
+            "status": "Paid",
+            "events": [
+              {
+                "standard": "schelling-deals",
+                "version": "1.0.0",
+                "event": "settle",
+                "data": {
+                  "seller": "seller-sdl7338.testnet",
+                  "amount": "30000000000000000000000",
+                  "units": 3
+                }
+              },
+              {
+                "standard": "schelling-deals",
+                "version": "1.0.0",
+                "event": "payout",
+                "data": {
+                  "ok": true
+                }
+              }
+            ]
+          },
+          "txs": [
+            {
+              "label": "settle at 2/3 (expect reject)",
+              "hash": "HeJSupBhD7esK3BAxd65u2Hf7gatryd7QE2G4TfC7Hf8",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": false,
+              "error": "Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.settle - Smart contract panicked: minimum not reached",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            },
+            {
+              "label": "b1 raises pledge to 2 (total 3 = min)",
+              "hash": "C59zTVTAtzPKfftqEb71UUxbHSbS1wLtQmgRddhTvzSf",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 2,
+                    "total_units": 3
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":2,\"total_units\":3}}"
+              ]
+            },
+            {
+              "label": "settle at 3/3",
+              "hash": "3DgGXomLPPPuEvJAXpT6cjuPF29DdZtPnCyWG7Q9ECVm",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "settle",
+                  "data": {
+                    "seller": "seller-sdl7338.testnet",
+                    "amount": "30000000000000000000000",
+                    "units": 3
+                  }
+                },
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "payout",
+                  "data": {
+                    "ok": true
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"settle\",\"data\":{\"seller\":\"seller-sdl7338.testnet\",\"amount\":\"30000000000000000000000\",\"units\":3}}",
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"payout\",\"data\":{\"ok\":true}}"
+              ]
+            },
+            {
+              "label": "second settle (expect reject)",
+              "hash": "2bYEd3FTzeCXFcTQxM4d97oHkh44e4hCQDNjMdJcAVLh",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+              "ok": false,
+              "error": "Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.settle - Smart contract panicked: deal is not open",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            }
+          ]
+        },
+        {
+          "id": "h",
+          "title": "deal account has no access keys and runs the published code hash",
+          "pass": true,
+          "checks": {
+            "dealId": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+            "accessKeys": 0,
+            "code_hash": "11111111111111111111111111111111",
+            "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28"
+          },
+          "txs": []
+        },
+        {
+          "id": "g",
+          "title": "failed payout to a non-existent seller lets buyers reclaim in full",
+          "pass": true,
+          "checks": {
+            "dealId": "0s2d6b963d87fcc5ce4011ed3c6b61527a72945e19",
+            "ghostSeller": "nobody-d4780d98.testnet",
+            "statusAfterSettle": "PayoutFailed",
+            "settleEvents": [
+              {
+                "standard": "schelling-deals",
+                "version": "1.0.0",
+                "event": "settle",
+                "data": {
+                  "seller": "nobody-d4780d98.testnet",
+                  "amount": "10000000000000000000000",
+                  "units": 1
+                }
+              },
+              {
+                "standard": "schelling-deals",
+                "version": "1.0.0",
+                "event": "payout",
+                "data": {
+                  "ok": false
+                }
+              }
+            ],
+            "refunded": "0.012 NEAR",
+            "expected": "0.012 NEAR"
+          },
+          "txs": [
+            {
+              "label": "b1 pledges 1 to a deal whose seller does not exist",
+              "hash": "GSR9aEmELm9HqLqZD4SSqszuU4hZTH43AQvDdQPdvZXJ",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0s2d6b963d87fcc5ce4011ed3c6b61527a72945e19",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 1,
+                    "total_units": 1
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":1,\"total_units\":1}}"
+              ]
+            },
+            {
+              "label": "settle (payout must fail)",
+              "hash": "EQk591J17hHy8XSR83jN2P3URMp17JJAjoYKbh91vMgs",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s2d6b963d87fcc5ce4011ed3c6b61527a72945e19",
+              "ok": true,
+              "failedReceipts": 1,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "settle",
+                  "data": {
+                    "seller": "nobody-d4780d98.testnet",
+                    "amount": "10000000000000000000000",
+                    "units": 1
+                  }
+                },
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "payout",
+                  "data": {
+                    "ok": false
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"settle\",\"data\":{\"seller\":\"nobody-d4780d98.testnet\",\"amount\":\"10000000000000000000000\",\"units\":1}}",
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"payout\",\"data\":{\"ok\":false}}"
+              ]
+            },
+            {
+              "label": "refund b1 after PayoutFailed",
+              "hash": "8BBu7fYyBJLiW5mQj3i6YhXgnSDJePWnBsxiBUwSQLD",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0s2d6b963d87fcc5ce4011ed3c6b61527a72945e19",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "refund",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 1,
+                    "amount": "12000000000000000000000"
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"refund\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":1,\"amount\":\"12000000000000000000000\"}}"
+              ]
+            }
+          ]
+        },
+        {
+          "id": "d",
+          "title": "late pledge after the deadline is rejected",
+          "pass": true,
+          "checks": {
+            "dealId": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+            "totalUnits": 2,
+            "buyers": 1
+          },
+          "txs": [
+            {
+              "label": "b2 pledges after deadline (expect reject)",
+              "hash": "7WvT4WKSxxWtGZrvFrh2Mrnt1b5Zrhx4FXNGv7PhpJFk",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+              "ok": false,
+              "error": "Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.pledge - Smart contract panicked: deadline passed",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            }
+          ]
+        },
+        {
+          "id": "f",
+          "title": "missed deal: refund only after deadline, exactly pledge+fee, once",
+          "pass": true,
+          "checks": {
+            "dealId": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+            "refunded": "0.022 NEAR",
+            "expected": "0.022 NEAR",
+            "earlyRefundError": "Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: refunds are not open"
+          },
+          "txs": [
+            {
+              "label": "b1 pledges 2 to the deal that will miss",
+              "hash": "EHmYKWiADQA38kYTKcNFADJshL87Whkj92x1pKE1N23p",
+              "signer": "ada-sdl7338.testnet",
+              "receiver": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "pledge",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 2,
+                    "total_units": 2
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"pledge\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":2,\"total_units\":2}}"
+              ]
+            },
+            {
+              "label": "refund before deadline (expect reject)",
+              "hash": "DdJ7QDKk49VN9YDtEWyJyfVagCXuD3frs9HXhbATQBDd",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+              "ok": false,
+              "error": "Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: refunds are not open",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            },
+            {
+              "label": "refund b1 after deadline (called by b2)",
+              "hash": "GNr2oAmbfEVuRM7TJsCQfioeghgZRzrrtE9Pd7ExUk7Z",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+              "ok": true,
+              "failedReceipts": 0,
+              "events": [
+                {
+                  "standard": "schelling-deals",
+                  "version": "1.0.0",
+                  "event": "refund",
+                  "data": {
+                    "buyer": "ada-sdl7338.testnet",
+                    "units": 2,
+                    "amount": "22000000000000000000000"
+                  }
+                }
+              ],
+              "logs": [
+                "EVENT_JSON:{\"standard\":\"schelling-deals\",\"version\":\"1.0.0\",\"event\":\"refund\",\"data\":{\"buyer\":\"ada-sdl7338.testnet\",\"units\":2,\"amount\":\"22000000000000000000000\"}}"
+              ]
+            },
+            {
+              "label": "second refund (expect reject)",
+              "hash": "7qmED5maz3nRnKX5oQTUvEWjz5eKm4xhxnKq7Y7gJmiZ",
+              "signer": "bo-sdl7338.testnet",
+              "receiver": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+              "ok": false,
+              "error": "Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: panicked at src/lib.rs:164:42:\nnothing to refund",
+              "failedReceipts": 1,
+              "events": [],
+              "logs": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

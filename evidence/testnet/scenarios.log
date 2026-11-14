@@ -1,0 +1,150 @@
+run 2026-11-14T20-21-47-071Z-e2dff8 on testnet; code ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28; seller seller-sdl7338.testnet; buyers ada-sdl7338.testnet, bo-sdl7338.testnet
+
+[PASS] (a) two buyers create+pledge the same fresh deal concurrently
+{
+  "dealId": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+  "existedBefore": false,
+  "getDeal": {
+    "seller": "seller-sdl7338.testnet",
+    "item": "Quote Feed API access pass: 1 unit = 1 month of one API seat",
+    "offer_id": "scn-2026-11-14T20-21-47-071Z-e2dff8-main",
+    "unit_price": "10000000000000000000000",
+    "min_units": 3,
+    "max_units": 10,
+    "deadline_ns": "1794688312192066823",
+    "total_units": 2,
+    "buyers": 2,
+    "status": "Open",
+    "redemptions": 0,
+    "now_ns": "1794687716321493135"
+  },
+  "accessKeys": 0,
+  "viewAccount": {
+    "amount": "24000000000000000000000",
+    "locked": "0",
+    "code_hash": "11111111111111111111111111111111",
+    "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+    "storage_usage": 491,
+    "storage_paid_at": 0,
+    "block_height": 277705605,
+    "block_hash": "4zhpnfBaMHqw51XLZ7QAjyxecvamKi6GDxWwoF4tjAvW"
+  }
+}
+  b1 create+pledge 1: DyJB9VdJV9mP5bhfmX3kUL4JceE2KhwHCjQYU6rT1WPn ok
+  b2 create+pledge 1: 5nnrKZwzqZLfs4ZemRCZg1KUyBS5iZ57vYVvSCGFLXQS ok
+
+[PASS] (b) altered terms (price +1 yocto) derive a different address
+{
+  "original": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+  "alteredPricePlus1Yocto": "0s2c177fe6cf790176a27737f2ac06b3d14f31c424"
+}
+
+[PASS] (c) retried identical pledge is rejected and its deposit returned
+{
+  "deposit": "0.012 NEAR",
+  "netSpentGas": "0.000968 NEAR",
+  "totalUnitsAfter": 2
+}
+  b1 retries identical pledge 1 (expect reject): 4ZoCxvFG727yCVUCxmVecb9BVwK2A5PLR4bdS2tA3xBX failed: Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.pledge - Smart contract panicked: already pledged
+
+[PASS] (e) settle below min rejected; at min pays seller exactly once
+{
+  "topUpDeposit": "0.01 NEAR",
+  "sellerDelta": "0.03 NEAR",
+  "expected": "0.03 NEAR",
+  "status": "Paid",
+  "events": [
+    {
+      "standard": "schelling-deals",
+      "version": "1.0.0",
+      "event": "settle",
+      "data": {
+        "seller": "seller-sdl7338.testnet",
+        "amount": "30000000000000000000000",
+        "units": 3
+      }
+    },
+    {
+      "standard": "schelling-deals",
+      "version": "1.0.0",
+      "event": "payout",
+      "data": {
+        "ok": true
+      }
+    }
+  ]
+}
+  settle at 2/3 (expect reject): HeJSupBhD7esK3BAxd65u2Hf7gatryd7QE2G4TfC7Hf8 failed: Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.settle - Smart contract panicked: minimum not reached
+  b1 raises pledge to 2 (total 3 = min): C59zTVTAtzPKfftqEb71UUxbHSbS1wLtQmgRddhTvzSf ok
+  settle at 3/3: 3DgGXomLPPPuEvJAXpT6cjuPF29DdZtPnCyWG7Q9ECVm ok
+  second settle (expect reject): 2bYEd3FTzeCXFcTQxM4d97oHkh44e4hCQDNjMdJcAVLh failed: Contract call failed: 0s116905cc4519b4a8e97699c156b3cc1c50e753d8.settle - Smart contract panicked: deal is not open
+
+[PASS] (h) deal account has no access keys and runs the published code hash
+{
+  "dealId": "0s116905cc4519b4a8e97699c156b3cc1c50e753d8",
+  "accessKeys": 0,
+  "code_hash": "11111111111111111111111111111111",
+  "global_contract_hash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28"
+}
+
+[PASS] (g) failed payout to a non-existent seller lets buyers reclaim in full
+{
+  "dealId": "0s2d6b963d87fcc5ce4011ed3c6b61527a72945e19",
+  "ghostSeller": "nobody-d4780d98.testnet",
+  "statusAfterSettle": "PayoutFailed",
+  "settleEvents": [
+    {
+      "standard": "schelling-deals",
+      "version": "1.0.0",
+      "event": "settle",
+      "data": {
+        "seller": "nobody-d4780d98.testnet",
+        "amount": "10000000000000000000000",
+        "units": 1
+      }
+    },
+    {
+      "standard": "schelling-deals",
+      "version": "1.0.0",
+      "event": "payout",
+      "data": {
+        "ok": false
+      }
+    }
+  ],
+  "refunded": "0.012 NEAR",
+  "expected": "0.012 NEAR"
+}
+  b1 pledges 1 to a deal whose seller does not exist: GSR9aEmELm9HqLqZD4SSqszuU4hZTH43AQvDdQPdvZXJ ok
+  settle (payout must fail): EQk591J17hHy8XSR83jN2P3URMp17JJAjoYKbh91vMgs ok
+  refund b1 after PayoutFailed: 8BBu7fYyBJLiW5mQj3i6YhXgnSDJePWnBsxiBUwSQLD ok
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 28s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 23s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 18s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 12s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 7s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 2s
+waiting for deadline of 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43: 0s
+
+[PASS] (d) late pledge after the deadline is rejected
+{
+  "dealId": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+  "totalUnits": 2,
+  "buyers": 1
+}
+  b2 pledges after deadline (expect reject): 7WvT4WKSxxWtGZrvFrh2Mrnt1b5Zrhx4FXNGv7PhpJFk failed: Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.pledge - Smart contract panicked: deadline passed
+
+[PASS] (f) missed deal: refund only after deadline, exactly pledge+fee, once
+{
+  "dealId": "0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43",
+  "refunded": "0.022 NEAR",
+  "expected": "0.022 NEAR",
+  "earlyRefundError": "Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: refunds are not open"
+}
+  b1 pledges 2 to the deal that will miss: EHmYKWiADQA38kYTKcNFADJshL87Whkj92x1pKE1N23p ok
+  refund before deadline (expect reject): DdJ7QDKk49VN9YDtEWyJyfVagCXuD3frs9HXhbATQBDd failed: Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: refunds are not open
+  refund b1 after deadline (called by b2): GNr2oAmbfEVuRM7TJsCQfioeghgZRzrrtE9Pd7ExUk7Z ok
+  second refund (expect reject): 7qmED5maz3nRnKX5oQTUvEWjz5eKm4xhxnKq7Y7gJmiZ failed: Contract call failed: 0sa60d8c0b47bda68adf70dc26ae5055b4e0c2ee43.refund - Smart contract panicked: panicked at src/lib.rs:164:42:
+nothing to refund
+
+8/8 passed

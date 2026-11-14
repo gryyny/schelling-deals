@@ -1,0 +1,6 @@
+[Cy] scripted agent (deterministic rules, no LLM), account cy-sdl7338.testnet
+[Cy] offer quotefeed-202611142027 from seller-sdl7338.testnet: Quote Feed API access pass: 1 unit = 1 month of one API seat
+[Cy] Cy: need 3 units, pay at most 0.05 NEAR/unit, budget 1 NEAR, prefers the tier most likely to close
+[Cy] tier A (0.1 NEAR/unit, min 10, max 20): rejected, price above my max 0.05 NEAR
+[Cy] tier B (0.07 NEAR/unit, min 30, max 60): rejected, price above my max 0.05 NEAR
+[Cy] Cy: no tier meets my limits, declining

@@ -1,0 +1,20 @@
+{
+  "offerId": "quotefeed-202611142027",
+  "codeHash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
+  "seller": "seller-sdl7338.testnet",
+  "item": "Quote Feed API access pass: 1 unit = 1 month of one API seat",
+  "tiers": [
+    {
+      "minUnits": 10,
+      "maxUnits": 20,
+      "unitPriceYocto": "100000000000000000000000",
+      "deadlineNs": "1794688182239069517"
+    },
+    {
+      "minUnits": 30,
+      "maxUnits": 60,
+      "unitPriceYocto": "70000000000000000000000",
+      "deadlineNs": "1794688182239069517"
+    }
+  ]
+}
