@@ -210,7 +210,7 @@ fn redeem_and_delivery() {
     d.settle();
     callback(PromiseResult::Successful(vec![]));
     d.on_payout();
-    ctx("ada", 0, 3);
+    ctx("ada", REDEEM_FEE.as_yoctonear(), 3);
     let id = d.redeem(3, "seat for ada".into());
     assert_eq!(d.get_pledge(acc("ada")).redeemed, 3);
     ctx("seller.testnet", 0, 4);
@@ -222,7 +222,7 @@ fn redeem_and_delivery() {
     }));
     assert!(again.is_err());
     let over = std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| {
-        ctx("ada", 0, 6);
+        ctx("ada", REDEEM_FEE.as_yoctonear(), 6);
         d.redeem(8, "too many".into());
     }));
     assert!(over.is_err());
@@ -237,7 +237,7 @@ fn only_seller_confirms_delivery() {
     d.settle();
     callback(PromiseResult::Successful(vec![]));
     d.on_payout();
-    ctx("ada", 0, 3);
+    ctx("ada", REDEEM_FEE.as_yoctonear(), 3);
     let id = d.redeem(1, "x".into());
     ctx("ada", 0, 4);
     d.confirm_delivery(id, "a".repeat(64));
@@ -260,4 +260,37 @@ fn state_layout_matches_spec() {
     expected.push(0);
     expected.extend(0u32.to_le_bytes());
     assert_eq!(bytes, expected);
+}
+
+#[test]
+#[should_panic(expected = "attached deposit must be")]
+fn redeem_requires_the_storage_fee() {
+    let mut d = deal();
+    pledge(&mut d, "ada", 10, 10 * PRICE + fee(), 1);
+    ctx("anyone", 0, 2);
+    d.settle();
+    callback(PromiseResult::Successful(vec![]));
+    d.on_payout();
+    ctx("ada", 0, 3);
+    d.redeem(1, "x".into());
+}
+
+/// Worst-case record sizes must stay within what the fees fund (1 byte = 1e19 yoctoNEAR).
+#[test]
+fn fees_cover_worst_case_storage() {
+    const BYTE: u128 = 10_000_000_000_000_000_000;
+    const OVERHEAD: u128 = 40; // per-record storage overhead charged by the protocol
+    let longest = "a".repeat(64);
+    let pledge_record = (1 + 64) as u128 + borsh::to_vec(&Pledge { units: u32::MAX, redeemed: u32::MAX }).unwrap().len() as u128 + OVERHEAD;
+    let redemption = Redemption { buyer: longest.parse().unwrap(), units: u32::MAX, note: "n".repeat(MAX_NOTE), digest: Some("f".repeat(64)) };
+    let redemption_record = (1 + 4) as u128 + borsh::to_vec(&redemption).unwrap().len() as u128 + OVERHEAD;
+    let mut big = deal();
+    big.seller = longest.parse().unwrap();
+    big.item = "i".repeat(160);
+    big.offer_id = "o".repeat(64);
+    // contract state plus account record and global-contract reference; generous bound
+    let base = borsh::to_vec(&big).unwrap().len() as u128 + 5 + OVERHEAD + 200;
+    assert!(STORAGE_FEE.as_yoctonear() >= (base + pledge_record) * BYTE, "first buyer funds base + own record");
+    assert!(STORAGE_FEE.as_yoctonear() >= pledge_record * BYTE);
+    assert!(REDEEM_FEE.as_yoctonear() >= redemption_record * BYTE);
 }

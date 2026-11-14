@@ -6,7 +6,12 @@ use near_sdk::json_types::U128;
 use near_sdk::serde::Serialize;
 use near_sdk::{env, near, require, AccountId, Gas, NearToken, PanicOnDefault, Promise, PromiseResult};
 
-pub const STORAGE_FEE: NearToken = NearToken::from_millinear(2);
+/// Paid by each new buyer, returned with a refund. Covers the buyer's pledge record and,
+/// with at least one buyer, the deal's own state once it exceeds the zero-balance allowance.
+pub const STORAGE_FEE: NearToken = NearToken::from_millinear(10);
+/// Paid per redemption and kept: funds the redemption record and the seller's delivery digest.
+pub const REDEEM_FEE: NearToken = NearToken::from_millinear(4);
+const MAX_NOTE: usize = 120;
 const CALLBACK_GAS: Gas = Gas::from_tgas(10);
 
 pub const OPEN: u8 = 0;
@@ -94,6 +99,18 @@ fn emit(event: &str, data: serde_json::Value) {
 
 use near_sdk::borsh;
 
+/// Storage the account may use without holding a balance (NEP-448 zero-balance allowance).
+const ZBA_BYTES: u64 = 770;
+
+/// Fail with a clear message (the deposit then returns) instead of leaving a write unfunded.
+fn assert_storage_funded() {
+    let used = env::storage_usage();
+    if used > ZBA_BYTES {
+        let need = env::storage_byte_cost().as_yoctonear() * used as u128;
+        require!(env::account_balance().as_yoctonear() >= need, format!("storage not funded: {used} bytes need {need} yoctoNEAR"));
+    }
+}
+
 fn status_name(s: u8) -> &'static str {
     match s {
         OPEN => "Open",
@@ -128,6 +145,7 @@ impl Deal {
         }
         self.total_units = total;
         write_pledge(&buyer, &Pledge { units, redeemed: 0 });
+        assert_storage_funded();
         emit("pledge", serde_json::json!({"buyer": buyer, "units": units, "total_units": total}));
     }
 
@@ -185,9 +203,14 @@ impl Deal {
         }
     }
 
+    #[payable]
     pub fn redeem(&mut self, units: u32, note: String) -> u32 {
         require!(self.status == PAID, "deal is not paid");
-        require!(note.len() <= 200, "note too long");
+        require!(note.len() <= MAX_NOTE, "note too long");
+        require!(
+            env::attached_deposit() == REDEEM_FEE,
+            format!("attached deposit must be {} yoctoNEAR", REDEEM_FEE.as_yoctonear())
+        );
         let buyer = env::predecessor_account_id();
         let mut p = read_pledge(&buyer).expect("not a buyer");
         require!(units > 0 && units <= p.units - p.redeemed, "not enough credits");
@@ -197,6 +220,7 @@ impl Deal {
         self.redemptions += 1;
         let r = Redemption { buyer: buyer.clone(), units, note, digest: None };
         env::storage_write(&redemption_key(id), &borsh::to_vec(&r).expect("redemption"));
+        assert_storage_funded();
         emit("redeem", serde_json::json!({"id": id, "buyer": buyer, "units": units}));
         id
     }
@@ -208,6 +232,7 @@ impl Deal {
         require!(r.digest.is_none(), "already delivered");
         r.digest = Some(digest.clone());
         env::storage_write(&redemption_key(id), &borsh::to_vec(&r).expect("redemption"));
+        assert_storage_funded();
         emit("delivery", serde_json::json!({"id": id, "buyer": r.buyer, "digest": digest}));
     }
 

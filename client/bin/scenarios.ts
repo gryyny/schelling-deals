@@ -5,14 +5,18 @@ import { randomBytes } from "node:crypto";
 import type { Near } from "near-kit";
 import {
   blockTimeNs,
+  confirmDelivery,
   dealAccountId,
   type DealTerms,
   formatNear,
   getDeal,
+  getRedemption,
   isStatus,
   join,
   NEAR,
   pledgeTx,
+  redeem,
+  REDEEM_FEE,
   refund,
   settle,
   STORAGE_FEE,
@@ -20,7 +24,8 @@ import {
   type TxRecord,
   waitForBlockTime,
 } from "../src/deal.ts";
-import { arg, makeNear, networkFromEnv } from "../src/env.ts";
+import { arg, loadKeyPair, makeNear, networkFromEnv } from "../src/env.ts";
+import { nearChainReader, type Pass, signPass, verifyPass } from "../src/pass.ts";
 
 interface ScenarioResult {
   id: string;
@@ -36,7 +41,7 @@ const codeHash = process.env["SD_CODE_HASH"] ?? arg("code-hash");
 const seller = process.env["SD_SELLER"] ?? arg("seller");
 const [b1, b2] = (process.env["SD_BUYERS"] ?? arg("buyers")).split(",") as [string, string];
 if (!b1 || !b2) throw new Error("need two buyers");
-const only = new Set((process.argv.includes("--only") ? arg("only") : "a,b,c,d,e,f,g,h").split(","));
+const only = new Set((process.argv.includes("--only") ? arg("only") : "a,b,c,d,e,f,g,h,i").split(","));
 const runId = `${new Date().toISOString().replace(/[:.]/g, "-")}-${randomBytes(3).toString("hex")}`;
 const PRICE = 10n * (NEAR / 1000n); // 0.01 NEAR
 const results: ScenarioResult[] = [];
@@ -198,6 +203,64 @@ async function main(): Promise<void> {
       title: "failed payout to a non-existent seller lets buyers reclaim in full",
       pass: p.tx.ok && !!afterSettle && isStatus(afterSettle.status, "PayoutFailed") && r.ok && after - before === PRICE + STORAGE_FEE,
       checks: { dealId: d3Id, ghostSeller: ghost, statusAfterSettle: afterSettle?.status, settleEvents: s.events, refunded: formatNear(after - before), expected: formatNear(PRICE + STORAGE_FEE) },
+      txs,
+    });
+  }
+
+  if (only.has("i")) {
+    // Zero-balance-account rule: up to 770 bytes are free; beyond that the balance must cover storage at 1e19 yocto/byte.
+    const ZBA_FREE_BYTES = 770;
+    const BYTE_COST = 10_000_000_000_000_000_000n;
+    const d4 = await terms(near, "redeem", { minUnits: 2, maxUnits: 10, deadlineS: 600 });
+    const d4Id = dealAccountId(d4);
+    const sellerKey = await loadKeyPair(seller, net.networkId);
+    const steps: { step: string; storageUsage: number; amount: string; funded: boolean }[] = [];
+    const snap = async (step: string): Promise<void> => {
+      const a = await near.rpc.getAccount(d4Id);
+      const funded = a.storage_usage <= ZBA_FREE_BYTES || BigInt(a.amount) >= BigInt(a.storage_usage) * BYTE_COST;
+      steps.push({ step, storageUsage: a.storage_usage, amount: formatNear(BigInt(a.amount)), funded });
+    };
+    const txs: TxRecord[] = [];
+    txs.push((await join(near, b1, d4, 1, "b1 pledges 1")).tx);
+    await snap("b1 pledged");
+    txs.push((await join(near, b2, d4, 1, "b2 pledges 1 (min reached)")).tx);
+    await snap("b2 pledged");
+    txs.push(await settle(near, b1, d4Id, "settle at 2/2"));
+    await snap("settled");
+    const redemptionIds: number[] = [];
+    for (const b of [b1, b2]) {
+      const r = await redeem(near, b, d4Id, 1, `seat for ${b}`.slice(0, 120));
+      txs.push(r);
+      const ev = r.events.find((e) => e.event === "redeem")?.data as { id?: number } | undefined;
+      if (typeof ev?.id === "number") redemptionIds.push(ev.id);
+      await snap(`${b} redeemed (fee ${formatNear(REDEEM_FEE)})`);
+    }
+    const verdicts: Record<string, string> = {};
+    for (const id of redemptionIds) {
+      const red = await getRedemption(near, d4Id, id);
+      if (!red) continue;
+      const pass: Pass = { deal: d4Id, buyer: red.buyer, units: red.units, redemptionId: id, item: d4.item, issuedAt: new Date().toISOString() };
+      const signed = signPass(pass, seller, sellerKey);
+      await mkdir(new URL("../out/passes/", import.meta.url), { recursive: true });
+      await writeFile(new URL(`../out/passes/${d4Id}-${id}.json`, import.meta.url), `${JSON.stringify(signed, null, 2)}\n`);
+      txs.push(await confirmDelivery(near, seller, d4Id, id, signed.digest));
+      await snap(`delivery ${id} confirmed`);
+      const v = await verifyPass(signed, nearChainReader(near), Date.now());
+      verdicts[red.buyer] = v.ok ? "valid" : `invalid: ${v.reason}`;
+    }
+    const deal = await getDeal(near, d4Id);
+    await record({
+      id: "i",
+      title: "two buyers redeem with the fee, seller confirms both deliveries, storage stays funded",
+      pass:
+        txs.every((t) => t.ok) &&
+        redemptionIds.length === 2 &&
+        Object.values(verdicts).filter((v) => v === "valid").length === 2 &&
+        steps.every((s) => s.funded) &&
+        !!deal &&
+        isStatus(deal.status, "Paid") &&
+        deal.redemptions === 2,
+      checks: { dealId: d4Id, storageSteps: steps, redemptionIds, passVerdicts: verdicts, redemptions: deal?.redemptions },
       txs,
     });
   }

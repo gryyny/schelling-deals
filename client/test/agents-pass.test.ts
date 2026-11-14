@@ -1,7 +1,7 @@
 import { generateKey } from "near-kit";
 import { describe, expect, it } from "vitest";
-import { decide, PROFILES } from "../src/agents.ts";
-import type { Offer } from "../src/deal.ts";
+import { type BuyerProfile, decide, PROFILES, tierCost } from "../src/agents.ts";
+import { type Offer, REDEEM_FEE, STORAGE_FEE } from "../src/deal.ts";
 import { type Pass, passDigest, signPass, verifyPassSignature } from "../src/pass.ts";
 
 const offer: Offer = {
@@ -23,6 +23,28 @@ describe("scripted buyer decisions", () => {
     expect(pick("cy")).toBeNull();
     expect(pick("dee")).toBe(1);
     expect(decide(offer, PROFILES["ada"]!, 3000n).tierIndex).toBeNull();
+  });
+});
+
+describe("budget boundary", () => {
+  const price = 100_000_000_000_000_000_000_000n;
+  const cost = 4n * price + STORAGE_FEE + REDEEM_FEE;
+  const prof = (budgetYocto: bigint): BuyerProfile => ({ name: "T", needUnits: 4, maxUnitPriceYocto: price, budgetYocto, patient: false });
+  const oneTier: Offer = { ...offer, tiers: [offer.tiers[0]!] };
+
+  it("cost includes storage and redeem fees", () => {
+    expect(tierCost(price, 4, false).total).toBe(cost);
+    expect(tierCost(price, 4, true).total).toBe(cost - STORAGE_FEE);
+  });
+  it("accepts when budget equals cost exactly", () => {
+    expect(decide(oneTier, prof(cost), 1000n).tierIndex).toBe(0);
+  });
+  it("declines at 1 yocto below cost", () => {
+    expect(decide(oneTier, prof(cost - 1n), 1000n).tierIndex).toBeNull();
+  });
+  it("an existing buyer does not pay the storage fee again", () => {
+    expect(decide(oneTier, prof(cost - STORAGE_FEE), 1000n, () => true).tierIndex).toBe(0);
+    expect(decide(oneTier, prof(cost - STORAGE_FEE), 1000n).tierIndex).toBeNull();
   });
 });
 

@@ -1,4 +1,6 @@
-tier A 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf: Paid
-  redemption 0 for ada-sdl7338.testnet (4 units): pass out/passes/0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf-0.json, digest 2434e57ed43547ab7c76d19c1c023448f6fc021ebca79b19ffd640c8c79bd858
-  confirm_delivery tx 4ffT8XTBFyp1HgpgvqXpeQVrnyPgSZZQSj7WarQzrVfQ ok
-tier B 0s07da072ef043453a65efbc0957428d04d39de384: Open
+tier A 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67: Paid
+  redemption 0 for ada-sdl7338.testnet (4 units): pass out/passes/0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67-0.json, digest b9dd2cc4d45e1ed421a9423b3a7770446b76dfb867f4044bb44f43c7b358a21a
+  confirm_delivery tx CeE9v5Ppm2UVgKbHWMj5EgpGFZqoxX7gKhnThqoQLm38 ok
+  redemption 1 for bo-sdl7338.testnet (6 units): pass out/passes/0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67-1.json, digest 8c7110fd7353670f78fa70a4336b9fa23552b4ebe7a9ba4a10bd17c294236e71
+  confirm_delivery tx 9PwiLiAEB84NDpywmNHgvvCkdj97nfB4CWWVJqg443Nu ok
+tier B 0s991d30efcae6251b55dfa152d70175d05bba0ce3: Open

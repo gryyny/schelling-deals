@@ -1,7 +1,8 @@
 import { readFile } from "node:fs/promises";
 import { deriveAccountId, type Near, type TransactionBuilder } from "near-kit";
 
-export const STORAGE_FEE = 2_000_000_000_000_000_000_000n; // 0.002 NEAR
+export const STORAGE_FEE = 10_000_000_000_000_000_000_000n; // 0.01 NEAR per new buyer, refunded with the pledge
+export const REDEEM_FEE = 4_000_000_000_000_000_000_000n; // 0.004 NEAR per redemption, not refunded
 export const STATE_KEY = new TextEncoder().encode("STATE");
 export const EVENT_STANDARD = "schelling-deals";
 
@@ -343,7 +344,7 @@ export function refund(near: Near, caller: string, dealId: string, buyer: string
 }
 
 export function redeem(near: Near, buyer: string, dealId: string, units: number, note: string): Promise<TxRecord> {
-  return submit(near, `redeem ${units} by ${buyer}`, buyer, near.transaction(buyer).functionCall(dealId, "redeem", { units, note }, { gas: GAS_PLEDGE }));
+  return submit(near, `redeem ${units} by ${buyer}`, buyer, near.transaction(buyer).functionCall(dealId, "redeem", { units, note }, { gas: GAS_PLEDGE, attachedDeposit: REDEEM_FEE }));
 }
 
 export function confirmDelivery(near: Near, seller: string, dealId: string, id: number, digest: string): Promise<TxRecord> {

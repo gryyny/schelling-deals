@@ -3,7 +3,7 @@ import { bytesToHex } from "@noble/hashes/utils.js";
 import { base58 } from "@scure/base";
 import { createStateInit, serializeStateInit } from "near-kit";
 import { describe, expect, it } from "vitest";
-import { BorshWriter, type DealTerms, dealAccountId, dealStateInit, encodeInitialDealState, pledgeDeposit, STORAGE_FEE } from "../src/deal.ts";
+import { BorshWriter, type DealTerms, dealAccountId, dealStateInit, encodeInitialDealState, pledgeDeposit, REDEEM_FEE, STORAGE_FEE } from "../src/deal.ts";
 
 const codeHash = base58.encode(new Uint8Array(32).map((_, i) => i + 1));
 const terms: DealTerms = {
@@ -75,6 +75,10 @@ describe("deal address derivation", () => {
 });
 
 describe("pledge deposit", () => {
+  it("uses the contract fees", () => {
+    expect(STORAGE_FEE).toBe(10_000_000_000_000_000_000_000n);
+    expect(REDEEM_FEE).toBe(4_000_000_000_000_000_000_000n);
+  });
   it("adds the storage fee only for a new buyer", () => {
     expect(pledgeDeposit(terms, 0, 4)).toBe(4n * terms.unitPrice + STORAGE_FEE);
     expect(pledgeDeposit(terms, 4, 6)).toBe(2n * terms.unitPrice);

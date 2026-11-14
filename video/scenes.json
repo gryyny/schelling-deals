@@ -15,9 +15,9 @@
   "id": "s02",
   "title": "The seller publishes one offer, then stops",
   "lines": [
-   "offer quotefeed-202611142027 written to out/showcase/offer.json",
-   "  tier A deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf",
-   "  tier B deal address 0s07da072ef043453a65efbc0957428d04d39de384",
+   "offer quotefeed-202611142052 written to out/showcase/offer.json",
+   "  tier A deal address 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67",
+   "  tier B deal address 0s991d30efcae6251b55dfa152d70175d05bba0ce3",
    "seller process exits now; funding, settlement and refunds do not need it",
    "seller process exit code: 0; no seller process is running from here on"
   ]
@@ -48,15 +48,15 @@
   "id": "s05",
   "title": "Two buyers, one keyless account",
   "lines": [
-   "[Ada] derived deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf from code hash ADKfksXSef\u2026 + tier terms",
-   "[Ada] pledge 4 units, deposit 0.402 NEAR (had 0)",
-   "  tx 6aqTDZb9UG\u2026 ok events=pledge",
-   "[Bo] derived deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf from code hash ADKfksXSef\u2026 + tier terms",
-   "[Bo] pledge 6 units, deposit 0.602 NEAR (had 0)",
-   "  tx 4nfFCjnz6F\u2026 ok events=pledge",
+   "[Ada] derived deal address 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67 from code hash axfgbr7M92\u2026 + tier terms",
+   "[Ada] pledge 4 units, deposit 0.41 NEAR (had 0)",
+   "  tx CpL4mv6wrJ\u2026 ok events=pledge",
+   "[Bo] derived deal address 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67 from code hash axfgbr7M92\u2026 + tier terms",
+   "[Bo] pledge 6 units, deposit 0.61 NEAR (had 0)",
+   "  tx A1zF55jXbM\u2026 ok events=pledge",
    "",
-   "testnet RPC, deal 0s90060430\u2026: 0 access keys (nobody can sign for it)",
-   "code: global contract by hash ADKfksXSef9h\u2026 (cannot change)"
+   "testnet RPC, deal 0sff05b0ba1b\u2026: 0 access keys (nobody can sign for it)",
+   "code: global contract by hash axfgbr7M92qk\u2026 (cannot change)"
   ]
  },
  {
@@ -65,9 +65,9 @@
   "lines": [
    "[Ada] deal: 10/10 units, 2 buyers, Open",
    "[Ada] minimum reached; calling settle",
-   "  tx 49gee1C7PM\u2026 ok events=settle,payout",
+   "  tx 5GqSHBQDAT\u2026 ok events=settle,payout",
    "[Bo] minimum reached; calling settle",
-   "  tx 5fzwYfpAUJ\u2026 FAILED: Contract call failed: 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf.settle - Smart contract panicked: deal is not open events=-",
+   "  tx 2KqNYAjPGf\u2026 FAILED: Contract call failed: 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67.settle - Smart contract panicked: deal is not open events=-",
    "[Bo] another buyer settled first (expected race; payment happens once)"
   ]
  },
@@ -76,30 +76,28 @@
   "title": "The cheaper tier missed: Dee reclaims, no seller needed",
   "lines": [
    "[Dee] Dee: choosing the cheapest acceptable tier B; if it misses I reclaim my pledge",
-   "[Dee] pledge 5 units, deposit 0.352 NEAR (had 0)",
-   "[Dee] waiting: 5/30 units, deadline in 145s",
+   "[Dee] pledge 5 units, deposit 0.36 NEAR (had 0)",
    "[Dee] waiting: 5/30 units, deadline in 3s",
    "[Dee] deal missed; claiming my refund",
-   "  tx BUdB68iA6C\u2026 ok events=refund",
+   "  tx EaqHGLnbSb\u2026 ok events=refund",
    "",
-   "refund = 5 x 0.07 NEAR + 0.002 storage fee = 0.352 NEAR, exactly what Dee paid"
+   "refund = 5 x 0.07 NEAR + 0.01 storage fee = 0.36 NEAR, exactly what Dee paid"
   ]
  },
  {
   "id": "s08",
-  "title": "Redeem, deliver, verify",
+  "title": "Redeem, deliver, use the pass",
   "lines": [
-   "deal 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf (derived locally from offer quotefeed-202611142027)",
-   "  tx HSpDVPckcc\u2026 ok events=redeem",
-   "  redemption 0 for ada-sdl7338.testnet (4 units): pass out/passes/0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf-0.json, digest 2434e57ed43547ab7c76d19c1c023448f6fc021ebca79b19ffd640c8c79bd858",
-   "  confirm_delivery tx 4ffT8XTBFy\u2026 ok",
-   "ok   signatureValid",
-   "ok   keyOnSellerAccount",
-   "ok   dealSellerMatches",
-   "ok   digestMatchesFile",
-   "ok   digestOnChain",
-   "ok   buyerAndUnitsMatch",
-   "VALID pass for ada-sdl7338.testnet, 4 units, deal 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf"
+   "  tx FnjNzJL7fu\u2026 ok events=redeem",
+   "  tx EUR7TgfKPR\u2026 ok events=redeem",
+   "  confirm_delivery tx CeE9v5Ppm2\u2026 ok",
+   "  confirm_delivery tx 9PwiLiAEB8\u2026 ok",
+   "VALID pass for ada-sdl7338.testnet, 4 units until 2027-03-14T20:54:56.191Z, deal 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67",
+   "VALID pass for bo-sdl7338.testnet, 6 units until 2027-05-13T20:55:00.477Z, deal 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67",
+   "ok   valid pass: HTTP 200 (expected 200)",
+   "ok   tampered pass (units changed): HTTP 401 (expected 401)",
+   "ok   no Authorization header: HTTP 401 (expected 401)",
+   "quotes returned to Ada: NEAR/USD, BTC/USD, ETH/USD (labelled sample data; local API)"
   ]
  },
  {
@@ -113,6 +111,7 @@
    "",
    "Not guaranteed:",
    "  that the seller delivers (delivery is recorded on-chain, not enforced)",
+   "  that the seller keeps its API running (the demo API is local)",
    "",
    "NEAR testnet. Buyer agents are scripted rules, not models.",
    "Also tested on testnet: concurrent creation, changed terms, retried pledge, late pledge,",

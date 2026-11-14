@@ -53,7 +53,8 @@ async function main(): Promise<void> {
   console.log(`[${profile.name}] scripted agent (deterministic rules, no LLM), account ${account}`);
   console.log(`[${profile.name}] offer ${offer.offerId} from ${offer.seller}: ${offer.item}`);
 
-  const decision = decide(offer, profile, await blockTimeNs(near));
+  const existing = await Promise.all(offer.tiers.map((_, i) => getPledge(near, dealAccountId(termsFor(offer, i)), account)));
+  const decision = decide(offer, profile, await blockTimeNs(near), (i) => existing[i] != null);
   for (const line of decision.reasoning) console.log(`[${profile.name}] ${line}`);
   if (decision.tierIndex === null) return;
 

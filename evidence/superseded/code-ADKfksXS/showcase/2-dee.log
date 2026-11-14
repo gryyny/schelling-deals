@@ -1,0 +1,26 @@
+[Dee] scripted agent (deterministic rules, no LLM), account dee-sdl7338.testnet
+[Dee] offer quotefeed-202611142027 from seller-sdl7338.testnet: Quote Feed API access pass: 1 unit = 1 month of one API seat
+[Dee] Dee: need 5 units, pay at most 0.08 NEAR/unit, budget 1 NEAR, will wait for a cheaper tier
+[Dee] tier A (0.1 NEAR/unit, min 10, max 20): rejected, price above my max 0.08 NEAR
+[Dee] tier B (0.07 NEAR/unit, min 30, max 60): acceptable, would cost 0.35 NEAR
+[Dee] Dee: choosing the cheapest acceptable tier B; if it misses I reclaim my pledge
+[Dee] derived deal address 0s07da072ef043453a65efbc0957428d04d39de384 from code hash ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28 + tier terms
+[Dee] pledge 5 units, deposit 0.352 NEAR (had 0)
+  tx 51nJemaRKssHFCkmwBjACSepFvtsGtLbaz18N5A1bPXh ok events=pledge
+[Dee] deal: 5/30 units, 1 buyers, Open
+[Dee] waiting: 5/30 units, deadline in 145s
+[Dee] waiting: 5/30 units, deadline in 133s
+[Dee] waiting: 5/30 units, deadline in 122s
+[Dee] waiting: 5/30 units, deadline in 111s
+[Dee] waiting: 5/30 units, deadline in 100s
+[Dee] waiting: 5/30 units, deadline in 89s
+[Dee] waiting: 5/30 units, deadline in 79s
+[Dee] waiting: 5/30 units, deadline in 68s
+[Dee] waiting: 5/30 units, deadline in 57s
+[Dee] waiting: 5/30 units, deadline in 47s
+[Dee] waiting: 5/30 units, deadline in 36s
+[Dee] waiting: 5/30 units, deadline in 25s
+[Dee] waiting: 5/30 units, deadline in 14s
+[Dee] waiting: 5/30 units, deadline in 3s
+[Dee] deal missed; claiming my refund
+  tx BUdB68iA6CPciajcfzL5XMxFPnBScAL6kFNz1ry513Qk ok events=refund

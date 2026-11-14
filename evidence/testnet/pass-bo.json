@@ -1,0 +1,14 @@
+{
+  "pass": {
+    "deal": "0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67",
+    "buyer": "bo-sdl7338.testnet",
+    "units": 6,
+    "redemptionId": 1,
+    "item": "Quote Feed API access pass: 1 unit = 1 month of one API seat",
+    "issuedAt": "2026-11-14T20:55:00.477Z"
+  },
+  "seller": "seller-sdl7338.testnet",
+  "publicKey": "ed25519:GVYruaeY7peKZTgvLmXJHusUCKif1RhumsrQnWp5cwqq",
+  "signature": "ed25519:5qfcAXUFG7XnbPL3xVdgE8X93onjEJxAVBpQ2yJXfgxpWDaWhF88ZeEsMNnRFByfx48iduXHK1FqHi4drJhR7Pjx",
+  "digest": "8c7110fd7353670f78fa70a4336b9fa23552b4ebe7a9ba4a10bd17c294236e71"
+}

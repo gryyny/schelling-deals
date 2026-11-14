@@ -1,145 +1,199 @@
 {
  "network": "testnet",
- "codeHash": "ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28",
- "scenarioRun": "2026-11-14T20-21-47-071Z-e2dff8",
+ "codeHash": "axfgbr7M92qkfNtSd8RP923HQmWLPynQp4qMjYUTcoG",
+ "scenarioRun": "2026-11-14T20-50-39-250Z-3808d1",
  "rows": [
   {
    "label": "Showcase: Ada creates/joins tier A and pledges 4",
-   "tx": "6aqTDZb9UGs4zJoc3f8wzUE3Tr6FbzTfhSMtxxMyLGCE",
+   "tx": "CpL4mv6wrJQnt1NvdV2xKvsMXsZWp5p3A829MBci2ThZ",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Showcase: Bo creates/joins tier A and pledges 6",
-   "tx": "4nfFCjnz6FNKN1puMQ8XHnJjvyxySAHXXs3e84Azm7mj",
+   "tx": "A1zF55jXbMTWtJHBisuxhPHFHYU2Fti4pjPQ9FeWMTho",
    "outcome": "ok",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Showcase: Ada settles at 10/10; seller paid once",
-   "tx": "49gee1C7PM6GH1mTXPqYr2mPKV2P17VywXzemZE5PTZ7",
+   "tx": "5GqSHBQDATevHhRGU5CjdwAbpcB6ZP2kbfXjiCp83pti",
    "outcome": "ok: Paid",
    "signer": "ada-sdl7338.testnet"
   },
   {
-   "label": "Showcase: Bo's second settle",
-   "tx": "5fzwYfpAUJWFRkWnrBwneLAFvjMztYVnL7C6Qq3fm2nv",
+   "label": "Showcase: Bo's settle a moment later",
+   "tx": "2KqNYAjPGfWRqsM35KNeEyZ9Kah8smVS19QhRwkpDorR",
    "outcome": "rejected: deal is not open",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Showcase: Dee pledges 5 to tier B (min 30)",
-   "tx": "51nJemaRKssHFCkmwBjACSepFvtsGtLbaz18N5A1bPXh",
+   "tx": "A2neXS5DsuyZxviEHsC924SgV8SWAgSB8RmvzSjfhgGn",
    "outcome": "ok",
    "signer": "dee-sdl7338.testnet"
   },
   {
    "label": "Showcase: tier B missed; Dee reclaims her pledge",
-   "tx": "BUdB68iA6CPciajcfzL5XMxFPnBScAL6kFNz1ry513Qk",
+   "tx": "EaqHGLnbSbYSkhb6nyx9zxbpCFYwgA5BzCmdJoQ4dBa2",
    "outcome": "ok: refunded",
    "signer": "dee-sdl7338.testnet"
   },
   {
-   "label": "Showcase: Ada redeems 4 units",
-   "tx": "HSpDVPckccbeKvD4si7WGwzhSu66RrGUKWjC3ZhwNkNC",
+   "label": "Showcase: Ada redeems 4 units (0.004 NEAR fee)",
+   "tx": "FnjNzJL7fucLqbLH4xFoFDbHFhE6dPrQ8z8h7fkeoKaC",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
-   "label": "Showcase: seller delivers pass, records sha256",
-   "tx": "4ffT8XTBFyp1HgpgvqXpeQVrnyPgSZZQSj7WarQzrVfQ",
+   "label": "Showcase: Bo redeems 6 units (0.004 NEAR fee)",
+   "tx": "EUR7TgfKPRLNx9FeQBRJ6Z4ybTRrWG3sjr9WVDDkuzfN",
+   "outcome": "ok",
+   "signer": "bo-sdl7338.testnet"
+  },
+  {
+   "label": "Showcase: seller delivers pass 0 and records its sha256",
+   "tx": "CeE9v5Ppm2UVgKbHWMj5EgpGFZqoxX7gKhnThqoQLm38",
+   "outcome": "ok",
+   "signer": "seller-sdl7338.testnet"
+  },
+  {
+   "label": "Showcase: seller delivers pass 1 and records its sha256",
+   "tx": "9PwiLiAEB84NDpywmNHgvvCkdj97nfB4CWWVJqg443Nu",
    "outcome": "ok",
    "signer": "seller-sdl7338.testnet"
   },
   {
    "label": "Scenario a: two buyers create+pledge the same fresh deal concurrently (b1 create+pledge 1)",
-   "tx": "DyJB9VdJV9mP5bhfmX3kUL4JceE2KhwHCjQYU6rT1WPn",
+   "tx": "9R8c2qjBNsud517ewjcAe35wiaV3apVfSRgQ8cPwm7br",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Scenario a: two buyers create+pledge the same fresh deal concurrently (b2 create+pledge 1)",
-   "tx": "5nnrKZwzqZLfs4ZemRCZg1KUyBS5iZ57vYVvSCGFLXQS",
+   "tx": "887Aqrzjj1YVMYFbT2UKxuTKBZDBGMabEbuRA3f8K5Bt",
    "outcome": "ok",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario c: retried identical pledge is rejected and its deposit returned (b1 retries identical pledge 1 (expect reject))",
-   "tx": "4ZoCxvFG727yCVUCxmVecb9BVwK2A5PLR4bdS2tA3xBX",
+   "tx": "7b7wWzcqDZuLse6MrU3cG2r52x2D358uTr7vbQNNEPLQ",
    "outcome": "rejected: already pledged",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Scenario d: late pledge after the deadline is rejected (b2 pledges after deadline (expect reject))",
-   "tx": "7WvT4WKSxxWtGZrvFrh2Mrnt1b5Zrhx4FXNGv7PhpJFk",
+   "tx": "2t3VZiJipm4hyAhJR9XbygpyRweCQcZavWqxTjQNsYuX",
    "outcome": "rejected: deadline passed",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario e: settle below min rejected; at min pays seller exactly once (settle at 2/3 (expect reject))",
-   "tx": "HeJSupBhD7esK3BAxd65u2Hf7gatryd7QE2G4TfC7Hf8",
+   "tx": "9FvHKejebCR7zSmHM6B5RGZJcHxxjrLgeZiUqrq5AAg8",
    "outcome": "rejected: minimum not reached",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario e: settle below min rejected; at min pays seller exactly once (b1 raises pledge to 2 (total 3 = min))",
-   "tx": "C59zTVTAtzPKfftqEb71UUxbHSbS1wLtQmgRddhTvzSf",
+   "tx": "HnKPYLUkdaWny9t3tkBwgmKPx9Pngmt4w1Bfjcs2WhGg",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Scenario e: settle below min rejected; at min pays seller exactly once (settle at 3/3)",
-   "tx": "3DgGXomLPPPuEvJAXpT6cjuPF29DdZtPnCyWG7Q9ECVm",
+   "tx": "4aA5Qc3RdQVNn1RrG7o87mWh9LHzLbrB7jwafaBmpdrX",
    "outcome": "ok",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario e: settle below min rejected; at min pays seller exactly once (second settle (expect reject))",
-   "tx": "2bYEd3FTzeCXFcTQxM4d97oHkh44e4hCQDNjMdJcAVLh",
+   "tx": "4BVDsYKbqVicP3Xy8JyWFijS6sz6q4YUn3xbwzyGDqMk",
    "outcome": "rejected: deal is not open",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario f: missed deal: refund only after deadline, exactly pledge+fee, once (b1 pledges 2 to the deal that will miss)",
-   "tx": "EHmYKWiADQA38kYTKcNFADJshL87Whkj92x1pKE1N23p",
+   "tx": "9jwAGJ9KK9Smcg6AANERD3zuX8BLJBBTE3ssFCKLWU7Z",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Scenario f: missed deal: refund only after deadline, exactly pledge+fee, once (refund before deadline (expect reject))",
-   "tx": "DdJ7QDKk49VN9YDtEWyJyfVagCXuD3frs9HXhbATQBDd",
+   "tx": "y4ywUanjazWRSgDCTu7LRaEtmHocsKG9MLud2GLrxzv",
    "outcome": "rejected: refunds are not open",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario f: missed deal: refund only after deadline, exactly pledge+fee, once (refund b1 after deadline (called by b2))",
-   "tx": "GNr2oAmbfEVuRM7TJsCQfioeghgZRzrrtE9Pd7ExUk7Z",
+   "tx": "4ZPytqCNNuNJ7xwMbRnUs5fezLirdwEscUyqgvHnveZe",
    "outcome": "ok",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario f: missed deal: refund only after deadline, exactly pledge+fee, once (second refund (expect reject))",
-   "tx": "7qmED5maz3nRnKX5oQTUvEWjz5eKm4xhxnKq7Y7gJmiZ",
+   "tx": "5kXFsXSrgfThjqVzwBdVvfo4nVknosSbZzBS9NtdLQNe",
    "outcome": "rejected: nothing to refund",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario g: failed payout to a non-existent seller lets buyers reclaim in full (b1 pledges 1 to a deal whose seller does not exist)",
-   "tx": "GSR9aEmELm9HqLqZD4SSqszuU4hZTH43AQvDdQPdvZXJ",
+   "tx": "CVVzhwQGGym6ofhSiUp894cyptg5SF5m84cs47pj1Kkd",
    "outcome": "ok",
    "signer": "ada-sdl7338.testnet"
   },
   {
    "label": "Scenario g: failed payout to a non-existent seller lets buyers reclaim in full (settle (payout must fail))",
-   "tx": "EQk591J17hHy8XSR83jN2P3URMp17JJAjoYKbh91vMgs",
+   "tx": "E8TLfX7GhDQayaxnAb6Ux2K8CvfQZqiUYo98NUxENxML",
    "outcome": "ok: PayoutFailed (transfer to missing seller failed)",
    "signer": "bo-sdl7338.testnet"
   },
   {
    "label": "Scenario g: failed payout to a non-existent seller lets buyers reclaim in full (refund b1 after PayoutFailed)",
-   "tx": "8BBu7fYyBJLiW5mQj3i6YhXgnSDJePWnBsxiBUwSQLD",
+   "tx": "GvuuRZuwYhqaiZQS4Z2RpLrgXSSFh79jskWFvbMinZqg",
    "outcome": "ok",
    "signer": "bo-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (b1 pledges 1)",
+   "tx": "GtS6ynthXB1TQDZwhvQ5vn8A7ekZgFw6svWGUYK3B3qZ",
+   "outcome": "ok",
+   "signer": "ada-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (b2 pledges 1 (min reached))",
+   "tx": "4mrm5esrdAJFT2k9QWtJZcn47snucff8JCuGTLceqhyN",
+   "outcome": "ok",
+   "signer": "bo-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (settle at 2/2)",
+   "tx": "5DwGYWtHf6WaEV8XTmK6Y1yEEPanQyPszsdbnmWwQ9jP",
+   "outcome": "ok",
+   "signer": "ada-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (redeem 1 by ada-sdl7338.testnet)",
+   "tx": "C792u8QDbc8bj8xaB4PfZZV81hg5tAemjTmmR6A5YpPK",
+   "outcome": "ok",
+   "signer": "ada-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (redeem 1 by bo-sdl7338.testnet)",
+   "tx": "AFovEviTWsCUaXzcsmvtWSAyWTG9e8oR8RQyp9ADJPg9",
+   "outcome": "ok",
+   "signer": "bo-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (confirm_delivery 0 by seller-sdl7338.testnet)",
+   "tx": "AcSfSqArB2L6c5WBWZuHAb3unECW8zN3tCJdiDyBNmcw",
+   "outcome": "ok",
+   "signer": "seller-sdl7338.testnet"
+  },
+  {
+   "label": "Scenario i: two buyers redeem with the fee, seller confirms both deliveries, storage stays funded (confirm_delivery 1 by seller-sdl7338.testnet)",
+   "tx": "9qFjaEiS1Rt13SbJDAM1fgisU21qHWpzskG7rPxuoGfp",
+   "outcome": "ok",
+   "signer": "seller-sdl7338.testnet"
   }
  ]
 }

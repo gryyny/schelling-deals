@@ -1,4 +1,4 @@
-import { NEAR, type Offer, formatNear } from "./deal.ts";
+import { NEAR, type Offer, REDEEM_FEE, STORAGE_FEE, formatNear } from "./deal.ts";
 
 /**
  * Scripted, deterministic buyer agents (no LLM). Each profile is private to its agent:
@@ -28,21 +28,30 @@ export interface Decision {
   reasoning: string[];
 }
 
-export function decide(offer: Offer, p: BuyerProfile, nowNs: bigint): Decision {
+/** Full cost of taking a tier: units at the tier price, the storage fee if new to the deal, and one redemption. */
+export function tierCost(unitPriceYocto: bigint, units: number, alreadyBuyer: boolean): { goods: bigint; storageFee: bigint; redeemFee: bigint; total: bigint } {
+  const goods = unitPriceYocto * BigInt(units);
+  const storageFee = alreadyBuyer ? 0n : STORAGE_FEE;
+  return { goods, storageFee, redeemFee: REDEEM_FEE, total: goods + storageFee + REDEEM_FEE };
+}
+
+export function decide(offer: Offer, p: BuyerProfile, nowNs: bigint, alreadyBuyer: (tierIndex: number) => boolean = () => false): Decision {
   const reasoning: string[] = [
     `${p.name}: need ${p.needUnits} units, pay at most ${formatNear(p.maxUnitPriceYocto)}/unit, budget ${formatNear(p.budgetYocto)}, ${p.patient ? "will wait for a cheaper tier" : "prefers the tier most likely to close"}`,
   ];
   const acceptable: number[] = [];
   offer.tiers.forEach((t, i) => {
     const price = BigInt(t.unitPriceYocto);
-    const cost = price * BigInt(p.needUnits);
+    const c = tierCost(price, p.needUnits, alreadyBuyer(i));
+    const cost = c.total;
+    const breakdown = `${formatNear(cost)} = ${p.needUnits} x ${formatNear(price)} + ${formatNear(c.storageFee)} storage fee (refundable) + ${formatNear(c.redeemFee)} redeem fee`;
     const label = `tier ${String.fromCharCode(65 + i)} (${formatNear(price)}/unit, min ${t.minUnits}, max ${t.maxUnits})`;
     if (BigInt(t.deadlineNs) <= nowNs) reasoning.push(`${label}: rejected, deadline passed`);
     else if (price > p.maxUnitPriceYocto) reasoning.push(`${label}: rejected, price above my max ${formatNear(p.maxUnitPriceYocto)}`);
-    else if (cost > p.budgetYocto) reasoning.push(`${label}: rejected, ${formatNear(cost)} exceeds budget`);
+    else if (cost > p.budgetYocto) reasoning.push(`${label}: rejected, ${breakdown} exceeds budget ${formatNear(p.budgetYocto)}`);
     else if (p.needUnits > t.maxUnits) reasoning.push(`${label}: rejected, my need exceeds the tier cap`);
     else {
-      reasoning.push(`${label}: acceptable, would cost ${formatNear(cost)}`);
+      reasoning.push(`${label}: acceptable, total ${breakdown}, within budget ${formatNear(p.budgetYocto)}`);
       acceptable.push(i);
     }
   });

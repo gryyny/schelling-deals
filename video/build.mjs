@@ -24,6 +24,8 @@ const spoken = new Map(
     .map((m) => [m[1], m[2].trim()]),
 );
 
+const caption = (id) =>
+  spoken.get(id).replace(/point one test net Near/g, "0.1 testnet NEAR").replace(/A P I/g, "API").replace(/Near test net/g, "NEAR testnet").replace(/on chain/g, "on-chain");
 const esc = (s) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 const color = (l) =>
   l.replace(/\b(ACCEPT|PASS|Paid|ok|created|refunded|verified|0 access keys)\b/g, '<b class="g">$1</b>')
@@ -42,7 +44,7 @@ function html(s) {
   img{max-width:100%;max-height:820px;border-radius:14px;border:1px solid #2a3340}
   .g{color:#7ee787}.r{color:#ff7b72}
   footer{position:fixed;left:0;right:0;bottom:0;padding:22px 120px 30px;background:rgba(0,0,0,.82);color:#fff;font:500 34px/1.35 -apple-system,Helvetica,sans-serif;text-align:center}
-  </style><header>${esc(s.title)}</header><div class="tag">${esc(s.tag ?? "NEAR testnet · scripted buyer agents")}</div><main>${body}</main><footer>${esc(spoken.get(s.id).replace(/A P I/g, "API").replace(/Near test net/g, "NEAR testnet").replace(/on chain/g, "on-chain"))}</footer>`;
+  </style><header>${esc(s.title)}</header><div class="tag">${esc(s.tag ?? "NEAR testnet · scripted buyer agents")}</div><main>${body}</main><footer>${esc(caption(s.id))}</footer>`;
 }
 
 const dur = (f) =>
@@ -71,7 +73,7 @@ for (const [i, s] of scenes.entries()) {
   execFileSync(ffmpeg, ["-y", "-loglevel", "error", "-loop", "1", "-i", png, "-i", wav, "-af", `apad=pad_dur=${PAD}`,
     "-t", d.toFixed(3), "-r", "30", "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac", "-ar", "48000", "-ac", "2", mp4]);
   parts.push(mp4);
-  srt.push(`${i + 1}\n${fmt(t + 0.05, ",")} --> ${fmt(t + d - 0.2, ",")}\n${spoken.get(s.id)}\n`);
+  srt.push(`${i + 1}\n${fmt(t + 0.05, ",")} --> ${fmt(t + d - 0.2, ",")}\n${caption(s.id)}\n`);
   t += d;
 }
 await browser.close();

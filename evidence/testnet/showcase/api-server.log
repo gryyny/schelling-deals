@@ -1,0 +1,4 @@
+Quote Feed API on http://127.0.0.1:8787/v1/quotes (pass-gated; sample data)
+GET /v1/quotes -> 200
+GET /v1/quotes -> 401 (signatureValid)
+GET /v1/quotes -> 401 (missing Authorization: Pass <base64url pass>)

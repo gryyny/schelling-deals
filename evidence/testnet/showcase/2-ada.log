@@ -1,12 +1,12 @@
 [Ada] scripted agent (deterministic rules, no LLM), account ada-sdl7338.testnet
-[Ada] offer quotefeed-202611142027 from seller-sdl7338.testnet: Quote Feed API access pass: 1 unit = 1 month of one API seat
+[Ada] offer quotefeed-202611142052 from seller-sdl7338.testnet: Quote Feed API access pass: 1 unit = 1 month of one API seat
 [Ada] Ada: need 4 units, pay at most 0.12 NEAR/unit, budget 1 NEAR, prefers the tier most likely to close
-[Ada] tier A (0.1 NEAR/unit, min 10, max 20): acceptable, would cost 0.4 NEAR
-[Ada] tier B (0.07 NEAR/unit, min 30, max 60): acceptable, would cost 0.28 NEAR
+[Ada] tier A (0.1 NEAR/unit, min 10, max 20): acceptable, total 0.414 NEAR = 4 x 0.1 NEAR + 0.01 NEAR storage fee (refundable) + 0.004 NEAR redeem fee, within budget 1 NEAR
+[Ada] tier B (0.07 NEAR/unit, min 30, max 60): acceptable, total 0.294 NEAR = 4 x 0.07 NEAR + 0.01 NEAR storage fee (refundable) + 0.004 NEAR redeem fee, within budget 1 NEAR
 [Ada] Ada: choosing tier A, the lowest minimum among acceptable tiers
-[Ada] derived deal address 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf from code hash ADKfksXSef9h37xY3WBRZk2CPBmpZLokTEeQHiFuB28 + tier terms
-[Ada] pledge 4 units, deposit 0.402 NEAR (had 0)
-  tx 6aqTDZb9UGs4zJoc3f8wzUE3Tr6FbzTfhSMtxxMyLGCE ok events=pledge
+[Ada] derived deal address 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67 from code hash axfgbr7M92qkfNtSd8RP923HQmWLPynQp4qMjYUTcoG + tier terms
+[Ada] pledge 4 units, deposit 0.41 NEAR (had 0)
+  tx CpL4mv6wrJQnt1NvdV2xKvsMXsZWp5p3A829MBci2ThZ ok events=pledge
 [Ada] deal: 10/10 units, 2 buyers, Open
 [Ada] minimum reached; calling settle
-  tx 49gee1C7PM6GH1mTXPqYr2mPKV2P17VywXzemZE5PTZ7 ok events=settle,payout
+  tx 5GqSHBQDATevHhRGU5CjdwAbpcB6ZP2kbfXjiCp83pti ok events=settle,payout

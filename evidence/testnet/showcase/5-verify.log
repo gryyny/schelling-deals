@@ -1,7 +1,14 @@
 ok   signatureValid
 ok   keyOnSellerAccount
 ok   dealSellerMatches
-ok   digestMatchesFile
 ok   digestOnChain
 ok   buyerAndUnitsMatch
-VALID pass for ada-sdl7338.testnet, 4 units, deal 0s90060430feb83bcf5dfcc8705470cc2e9b17fdaf
+ok   withinValidity
+VALID pass for ada-sdl7338.testnet, 4 units until 2027-03-14T20:54:56.191Z, deal 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67
+ok   signatureValid
+ok   keyOnSellerAccount
+ok   dealSellerMatches
+ok   digestOnChain
+ok   buyerAndUnitsMatch
+ok   withinValidity
+VALID pass for bo-sdl7338.testnet, 6 units until 2027-05-13T20:55:00.477Z, deal 0sff05b0ba1bb32eda8546da6c5737b29dc3dafc67

@@ -5,37 +5,37 @@ WEBVTT
 Four small buyers want a volume price. Usually someone has to run the pool. Here, nobody does.
 
 2
-00:00:06.516 --> 00:00:14.268
-A seller publishes one offer: A P I passes, ten cents each, if at least ten sell together. Then the seller's process stops.
+00:00:06.516 --> 00:00:15.420
+A seller publishes one offer: API passes, 0.1 testnet NEAR each, if at least ten sell together. Then the seller's process stops.
 
 3
-00:00:14.518 --> 00:00:23.998
+00:00:15.670 --> 00:00:25.150
 Each buyer agent reads the terms and computes the escrow address on its own. Same terms, same address. Change one number, and the address changes.
 
 4
-00:00:24.248 --> 00:00:34.283
+00:00:25.400 --> 00:00:35.435
 The agents are scripted, with different needs and budgets. Ada and Bo accept. Cy declines: the price is above its limit. Dee waits for a cheaper tier.
 
 5
-00:00:34.533 --> 00:00:44.269
+00:00:35.685 --> 00:00:45.421
 Ada and Bo send their pledges at the same moment. One account is created, both pledges count, and it has no access keys. Nobody can sign for it.
 
 6
-00:00:44.519 --> 00:00:50.521
-Ten units reached. Bo settles, and the seller is paid exactly once. A second settle fails.
+00:00:45.671 --> 00:00:52.484
+Ten units reached. Ada settles, and the seller is paid exactly once. Bo's settle a moment later fails.
 
 7
-00:00:50.771 --> 00:00:57.009
+00:00:52.734 --> 00:00:58.971
 The cheaper tier never filled. After its deadline, Dee claims an exact refund, without the seller.
 
 8
-00:00:57.259 --> 00:01:05.501
-Ada redeems her passes. The seller comes back, delivers a signed pass, and records its hash on chain. Anyone can verify it.
+00:00:59.221 --> 00:01:11.581
+Ada and Bo redeem. The seller comes back, delivers signed passes, and records their hashes on-chain. Ada's pass opens the seller's quote feed API. A tampered pass is refused.
 
 9
-00:01:05.751 --> 00:01:14.037
-This runs on Near test net. The contract guarantees payment only at the minimum, or a refund. It does not force delivery.
+00:01:11.831 --> 00:01:20.117
+This runs on NEAR testnet. The contract guarantees payment only at the minimum, or a refund. It does not force delivery.
 
 10
-00:01:14.287 --> 00:01:18.775
+00:01:20.367 --> 00:01:24.855
 Schelling Deals. The terms are the address. No operator holds the money.
